@@ -1,16 +1,34 @@
-# Starter base
+# 📱 ChatIt
 
-A starting point to help you set up your project quickly and use the common components provided by `react-native-reusables`. The idea is to make it easier for you to get started.
+A modern, feature-rich chat application built with **React Native** and **Expo**, designed for seamless real-time communication.
 
-## Features
+![ChatIt Banner](./assets/images/Chatit.png)
 
-- NativeWind v4
-- Dark and light mode
-  - Android Navigation Bar matches mode
-  - Persistent mode
-- Common components
-  - ThemeToggle, Avatar, Button, Card, Progress, Text, Tooltip
+---
 
-<img src="https://github.com/mrzachnugent/react-native-reusables/assets/63797719/42c94108-38a7-498b-9c70-18640420f1bc"
-     alt="starter-base-template"
-     style="width:270px;" />
+## ✨ Features
+
+✅ **User Authentication**  
+✅ **Real-Time Messaging**  
+✅ **Beautiful Avatars and UI Components**  
+✅ **Dark & Light Theme Support**  
+✅ **Redux State Management**  
+✅ **Smooth Navigation with React Navigation**  
+✅ **Custom Animations and Tooltips**  
+✅ **Persistent Storage with AsyncStorage**
+
+---
+
+## 🛠️ Tech Stack
+
+- **React Native**
+- **Expo**
+- **React Navigation**
+- **Redux Toolkit** for state management
+- **NativeWind** and **Tailwind CSS** for styling
+- **RN Primitives** for UI components
+- **Lucide React Native** icons
+- **AsyncStorage** for persistent data
+- **React Native Reanimated** for smooth animations
+
+---
