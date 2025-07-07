@@ -2,7 +2,7 @@
 
 A modern, feature-rich chat application built with **React Native** and **Expo**, designed for seamless real-time communication.
 
-![ChatIt Banner](./assets/images/Chatit.png)
+<img src="./assets/images/Chatit.png" alt="ChatIt Banner" width="300"/>
 
 ---
 
