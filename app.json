@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Chatit",
+    "slug": "Chatit",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/Chatit.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/Chatit.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/Chatit.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.Chatit"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/Chatit.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
