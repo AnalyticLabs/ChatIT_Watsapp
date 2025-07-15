@@ -42,7 +42,9 @@ export default function CallHistory({ data }: CallHistoryProps) {
           const isSelected = selectedIds.includes(item.id);
           return (
             <TouchableOpacity
-              onPress={() => dispatch(toggleSelectCall(item.id))}
+              onLongPress={() => dispatch(toggleSelectCall(item.id))}
+              delayLongPress={100}
+              activeOpacity={0.8}
               className={`w-full flex-row items-center justify-between mb-4 ${
                 isSelected ? "bg-blue-900/50 rounded-lg px-6 py-3" : "px-6"
               }`}
