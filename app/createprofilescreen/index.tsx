@@ -98,6 +98,8 @@ export default function CreateProfileScreen() {
           <Checkbox
             status={agreed ? "checked" : "unchecked"}
             onPress={() => setAgreed(!agreed)}
+            color="#2563EB"
+            uncheckedColor="#D1D5DB"
           />
           <Text className="mb-0.5 dark:text-white text-black">
             I agree to the{" "}
