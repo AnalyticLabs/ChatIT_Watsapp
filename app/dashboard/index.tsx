@@ -24,6 +24,14 @@ export default function ChatDashboardScreen() {
     (state: RootState) => state.dashboard.profileData
   );
 
+  const searchText = useSelector(
+    (state: RootState) => state.dashboard.searchText
+  );
+
+  const filteredProfileData = profileData.filter((profile) =>
+    profile.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   const tabs: Array<"Chats" | "Status" | "Calls"> = [
     "Chats",
     "Status",
@@ -331,7 +339,8 @@ export default function ChatDashboardScreen() {
         {activeTab === "Chats" && (
           <>
             {Array.isArray(profileData) && profileData.length > 0 ? (
-              <AllProfile data={profileData} />
+              // <AllProfile data={profileData} />
+              <AllProfile data={filteredProfileData} />
             ) : (
               <View className="flex-1 justify-center items-center">
                 <Text className="text-gray-400 dark:text-gray-500 text-[15px] font-semibold mb-3">

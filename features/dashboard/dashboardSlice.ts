@@ -25,6 +25,7 @@ interface DashboardState {
   calls: CallItem[];
   profileData: ChatProfileItem[];
   selectedChatId: string | null;
+  searchText: string;
 }
 
 const initialState: DashboardState = {
@@ -33,6 +34,7 @@ const initialState: DashboardState = {
   calls: [],
   profileData: [],
   selectedChatId: null,
+  searchText: "",
 };
 
 const dashboardSlice = createSlice({
@@ -68,6 +70,9 @@ const dashboardSlice = createSlice({
       );
       state.selectedCallIds = [];
     },
+    setSearchText: (state, action) => {
+      state.searchText = action.payload;
+    },
   },
 });
 
@@ -79,6 +84,7 @@ export const {
   clearSelectedCalls,
   deleteSelectedCalls,
   setSelectedChatId,
+  setSearchText,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;
