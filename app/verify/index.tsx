@@ -71,7 +71,7 @@ export default function VerifyScreen() {
       alert("Please fill in all OTP fields.");
       return;
     }
-    router.push("/dashboard");
+    router.push("/createprofilescreen");
   };
 
   const resendOtpHandler = () => {

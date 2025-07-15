@@ -63,6 +63,10 @@ export default function RootLayout() {
                 }}
               />
               <Stack.Screen
+                name="createprofilescreen"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
                 name="groupchat"
                 options={{
                   headerShown: false,
