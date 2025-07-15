@@ -17,6 +17,7 @@ interface ChatHeaderProps {
   onBack: () => void;
   isGroup?: boolean;
   baseRoute?: string;
+  chatId: string;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
@@ -26,6 +27,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   onBack,
   isGroup = false,
   baseRoute,
+  chatId,
 }) => {
   const { width } = useWindowDimensions();
   const maxNameWidth = width - 170;
@@ -40,7 +42,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
     const callType = isGroup ? "groupvideo" : "video";
     router.push({
       pathname: routeBase as "/call" | "/groupcall",
-      params: { type: callType },
+      params: { type: callType, id: chatId },
     });
   };
 
@@ -48,7 +50,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
     const callType = isGroup ? "groupcall" : "call";
     router.push({
       pathname: routeBase as "/call" | "/groupcall",
-      params: { type: callType },
+      params: { type: callType, id: chatId },
     });
   };
 

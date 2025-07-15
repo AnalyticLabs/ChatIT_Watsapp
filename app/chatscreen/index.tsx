@@ -56,6 +56,7 @@ export default function ChatScreen() {
         onBack={() => router.back()}
         isGroup={false}
         baseRoute="/call"
+        chatId={selectedChatId ?? ""}
       />
 
       {/* Chat Body */}
