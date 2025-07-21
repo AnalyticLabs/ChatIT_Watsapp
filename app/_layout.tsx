@@ -16,6 +16,8 @@ import { HeaderTitle } from "~/components/HeaderTitle";
 import { DashboardHeader } from "~/components/DashboardHeader";
 import { Provider } from "react-redux";
 import { store } from "~/store/index";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "~/utils/toastConfig";
 
 export default function RootLayout() {
   const hasMounted = React.useRef(false);
@@ -77,6 +79,7 @@ export default function RootLayout() {
             </Stack>
             <PortalHost />
           </ThemeWrapper>
+          <Toast config={toastConfig} />
         </SafeAreaView>
       </ThemeProvider>
     </Provider>
