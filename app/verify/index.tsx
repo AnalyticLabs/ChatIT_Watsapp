@@ -2,16 +2,26 @@ import React, { useRef, useState, useEffect } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "~/store";
+import { ActivityIndicator } from "react-native";
+import { sendOtp, verifyOtp } from "~/features/auth/authAction";
+import { hideToast, showError, showSuccess } from "~/utils/toast";
 
 export default function VerifyScreen() {
   const { isDarkColorScheme } = useColorScheme();
-  const { phoneNumber } = useLocalSearchParams();
+  const { phoneNumber, phoneSuffix } = useLocalSearchParams();
   const router = useRouter();
 
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
-  const [timer, setTimer] = useState(60);
+  const [timer, setTimer] = useState(30);
+
+  const dispatch = useDispatch();
+  const { sendOtpLoading, verifyOtpLoading } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,6 +34,16 @@ export default function VerifyScreen() {
     inputRefs.current[0]?.focus();
   }, []);
 
+  const [resendTimer, setResendTimer] = useState(30);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (resendTimer > 0) {
+      timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [resendTimer]);
+
   interface HandleChangeParams {
     text: string;
     index: number;
@@ -35,47 +55,59 @@ export default function VerifyScreen() {
     newOtp[index] = text;
     setOtp(newOtp);
 
-    if (text && index < 3) {
+    if (text && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
-  // const handleVerify = async () => {
-  //   const otpCode = otp.join("");
+  const handleVerify = async () => {
+    const otpCode = otp.join("");
 
-  //   if (otp.includes("")) {
-  //     alert("Please fill in all OTP fields.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await fetch("http://your-backend.com/api/verify-otp", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ phoneNumber, otp: otpCode }),
-  //     });
-
-  //     const data = await response.json();
-  //     if (response.ok) {
-  //       router.replace("/home");
-  //     } else {
-  //       alert(data.message || "Verification failed");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  const handleVerify = () => {
-    if (otp.join("").length !== 4) {
-      alert("Please fill in all OTP fields.");
+    if (otpCode.length !== 6) {
+      showError("All fields required", "Please fill in all OTP fields");
       return;
     }
-    router.push("/createprofilescreen");
+
+    try {
+      await dispatch(
+        verifyOtp({
+          phoneNumber: String(phoneNumber),
+          phoneSuffix: String(phoneSuffix),
+          otp: otpCode,
+        }) as any
+      );
+      hideToast();
+      showSuccess("Verified", "OTP Verified succesfully");
+      router.push("/createprofilescreen");
+    } catch (err: any) {
+      hideToast();
+
+      const errorMessage =
+        err && typeof err === "object" && "message" in err
+          ? (err as any).message
+          : "Verification failed";
+
+      showError("Verification failed", errorMessage);
+    }
   };
 
-  const resendOtpHandler = () => {
-    router.push("/");
+  const resendOtpHandler = async () => {
+    try {
+      await dispatch(
+        sendOtp({
+          phoneNumber: String(phoneNumber),
+          phoneSuffix: String(phoneSuffix),
+        }) as any
+      );
+      showSuccess("OTP Sent", "A new OTP has been sent");
+      setResendTimer(30);
+    } catch (err: any) {
+      const errorMessage =
+        err && typeof err === "object" && "message" in err
+          ? err.message
+          : "Something went wrong";
+      showError("Resend Failed", errorMessage);
+    }
   };
 
   return (
@@ -88,8 +120,8 @@ export default function VerifyScreen() {
         Code has been sent to ******{String(phoneNumber).slice(-4)}
       </Text>
 
-      <View className="flex-row gap-3 mb-4">
-        {[0, 1, 2, 3].map((i) => (
+      <View className="flex-row gap-2 mb-4">
+        {[0, 1, 2, 3, 4, 5].map((i) => (
           <TextInput
             key={i}
             ref={(ref) => (inputRefs.current[i] = ref)}
@@ -105,7 +137,7 @@ export default function VerifyScreen() {
                 inputRefs.current[i - 1]?.focus();
               }
             }}
-            className={`w-14 h-14 text-2xl font-bold border-2 rounded-xl text-center ${
+            className={`w-10 h-14 text-2xl font-bold border-2 rounded-xl text-center ${
               otp[i]
                 ? isDarkColorScheme
                   ? "border-blue-500 bg-blue-900 text-white"
@@ -118,34 +150,46 @@ export default function VerifyScreen() {
         ))}
       </View>
 
-      {timer > 0 ? (
-        <Text
-          className={`${
-            isDarkColorScheme ? "text-gray-300" : "text-gray-600"
-          } text-base font-bold`}
-        >
-          Resend code in{" "}
-          <Text className="text-blue-500 text-base font-bold">{timer}s</Text>
-        </Text>
-      ) : (
+      {resendTimer === 0 ? (
         <Pressable
           onPress={resendOtpHandler}
-          className="px-4 py-3 rounded-full w-full bg-blue-600"
+          disabled={sendOtpLoading}
+          className={`w-full py-3 px-4 rounded-full mt-3 ${
+            sendOtpLoading ? "bg-blue-800" : "bg-blue-600"
+          }`}
         >
-          <Text className="text-center text-white text-lg font-bold">
-            Resend OTP
-          </Text>
+          {sendOtpLoading ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Text className="text-center text-white text-lg font-bold">
+              Resend OTP
+            </Text>
+          )}
         </Pressable>
+      ) : (
+        <Text className="text-gray-500 mt-3 text-center">
+          Resend OTP in {resendTimer}s
+        </Text>
       )}
 
       <Pressable
         onPress={handleVerify}
-        disabled={otp.includes("")}
+        disabled={otp.includes("") || verifyOtpLoading}
         className={`px-4 py-3 rounded-full w-full mt-3 ${
-          otp.includes("") ? "bg-gray-500" : "bg-blue-600"
+          verifyOtpLoading
+            ? "bg-blue-800"
+            : otp.includes("")
+            ? "bg-gray-500"
+            : "bg-blue-600"
         }`}
       >
-        <Text className="text-center text-white text-lg font-bold">Verify</Text>
+        {verifyOtpLoading ? (
+          <ActivityIndicator size="small" color="#ffffff" />
+        ) : (
+          <Text className="text-center text-white text-lg font-bold">
+            Verify
+          </Text>
+        )}
       </Pressable>
     </View>
   );
