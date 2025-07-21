@@ -12,6 +12,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { useDispatch, useSelector } from "react-redux";
+import { sendOtp } from "~/features/auth/authAction";
+import { hideToast, showError, showSuccess } from "~/utils/toast";
+import { RootState } from "~/store";
+import { ActivityIndicator } from "react-native";
 
 const countryCodes = [
   { code: "+91", country: "India" },
@@ -29,6 +34,9 @@ export default function LoginScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const router = useRouter();
 
+  const dispatch = useDispatch();
+  const { sendOtpLoading } = useSelector((state: RootState) => state.auth);
+
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -42,42 +50,43 @@ export default function LoginScreen() {
     setMobile(numericText);
   };
 
-  // const handleSendOTP = async () => {
-  //   const phoneNumber = `${countryCode}${mobile}`;
-
-  //   try {
-  //     const response = await fetch("http://your-backend.com/api/send-otp", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ phoneNumber }),
-  //     });
-
-  //     const data = await response.json();
-
-  //     if (response.ok) {
-  //       router.push({
-  //         pathname: "/verify",
-  //         params: { phoneNumber },
-  //       });
-  //     } else {
-  //       console.error("Failed to send OTP:", data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error sending OTP:", error);
-  //   }
-  // };
-
-  const handleSendOTP = () => {
+  const handleSendOTP = async () => {
     if (!mobile || mobile.length < 10) {
-      alert("Please enter a valid 10-digit number.");
+      showError(
+        "Invalid number",
+        "Please enter a valid 10-digit mobile number"
+      );
       return;
     }
-    router.push({
-      pathname: "/verify",
-      params: { phoneNumber: `${countryCode}${mobile}` },
-    });
+
+    try {
+      await dispatch(
+        sendOtp({
+          phoneNumber: mobile,
+          phoneSuffix: countryCode,
+        }) as any
+      );
+
+      hideToast();
+      showSuccess("OTP Sent!", `OTP sent to ${countryCode} ${mobile}`);
+
+      router.push({
+        pathname: "/verify",
+        params: {
+          phoneNumber: mobile,
+          phoneSuffix: countryCode,
+        },
+      });
+    } catch (err) {
+      hideToast();
+
+      const errorMessage =
+        err && typeof err === "object" && "message" in err
+          ? (err as any).message
+          : "Something went wrong";
+
+      showError("Failed to send OTP", errorMessage);
+    }
   };
 
   const handleCountrySelect = (code: string) => {
@@ -153,14 +162,22 @@ export default function LoginScreen() {
         <View className="w-full max-w-sm mt-3">
           <Pressable
             onPress={handleSendOTP}
-            disabled={(mobile ?? "").length < 10}
+            disabled={sendOtpLoading || (mobile ?? "").length < 10}
             className={`px-6 py-3 rounded-full w-full ${
-              (mobile ?? "").length < 10 ? "bg-gray-500" : "bg-blue-600"
+              sendOtpLoading
+                ? "bg-blue-800"
+                : (mobile ?? "").length < 10
+                ? "bg-gray-500"
+                : "bg-blue-600"
             }`}
           >
-            <Text className="text-center text-white text-lg font-bold">
-              Send OTP
-            </Text>
+            {sendOtpLoading ? (
+              <ActivityIndicator size="small" color="#ffffff" />
+            ) : (
+              <Text className="text-center text-white text-lg font-bold">
+                Send OTP
+              </Text>
+            )}
           </Pressable>
         </View>
       </View>
