@@ -60,12 +60,15 @@ export default function LoginScreen() {
     }
 
     try {
-      await dispatch(
+      const response: any = await dispatch(
         sendOtp({
           phoneNumber: mobile,
           phoneSuffix: countryCode,
         }) as any
       );
+      if (response?.status !== "success") {
+        throw new Error("OTP not sent");
+      }
 
       hideToast();
       showSuccess("OTP Sent!", `OTP sent to ${countryCode} ${mobile}`);
@@ -84,7 +87,6 @@ export default function LoginScreen() {
         err && typeof err === "object" && "message" in err
           ? (err as any).message
           : "Something went wrong";
-
       showError("Failed to send OTP", errorMessage);
     }
   };
