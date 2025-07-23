@@ -7,11 +7,16 @@ export const sendOtpAPI = async ({
   phoneNumber: string;
   phoneSuffix: string;
 }) => {
-  const response = await axiosInstance.post("/auth/send-otp", {
-    phoneNumber,
-    phoneSuffix,
-  });
-  return response.data;
+  try {
+    const response = await axiosInstance.post("/auth/send-otp", {
+      phoneNumber,
+      phoneSuffix,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.log("SendOtpAPI failed:", error?.response?.data || error.message);
+    throw error;
+  }
 };
 
 export const verifyOtpAPI = async ({
@@ -23,10 +28,15 @@ export const verifyOtpAPI = async ({
   phoneSuffix: string;
   otp: string;
 }) => {
-  const response = await axiosInstance.post("/auth/verify-otp", {
-    phoneNumber,
-    phoneSuffix,
-    otp,
-  });
-  return response.data;
+  try {
+    const response = await axiosInstance.post("/auth/verify-otp", {
+      phoneNumber,
+      phoneSuffix,
+      otp,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.log("VerifyOtpAPI failed:", error?.response?.data || error.message);
+    throw error;
+  }
 };
