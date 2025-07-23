@@ -16,11 +16,13 @@ export const sendOtp = (payload: {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(sendOtpStart());
-      await sendOtpAPI(payload);
+      const response = await sendOtpAPI(payload);
       dispatch(sendOtpSuccess());
+      return response;
     } catch (error: any) {
       const message = error.response?.data?.message || "Something went wrong";
       dispatch(sendOtpFailure(message));
+      throw new Error(message);
     }
   };
 };
