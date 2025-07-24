@@ -1,10 +1,22 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { clsx } from "clsx";
 import { ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Checkbox } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "~/store";
+import { createProfile } from "~/features/auth/authAction";
+import { hideToast, showError, showSuccess } from "~/utils/toast";
+import { Image as RNImage } from "react-native";
 
 const avatars = [
   require("../../assets/images/avatar1.png"),
@@ -20,6 +32,11 @@ export default function CreateProfileScreen() {
   const [username, setUsername] = useState("");
   const [agreed, setAgreed] = useState(false);
 
+  const dispatch = useDispatch();
+  const { createProfileLoading } = useSelector(
+    (state: RootState) => state.auth
+  );
+
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -33,9 +50,32 @@ export default function CreateProfileScreen() {
     }
   };
 
-  const handleCreateProfile = () => {
+  const handleCreateProfile = async () => {
     if (!username || !agreed) return;
-    router.push("/dashboard");
+
+    try {
+      await dispatch<any>(
+        createProfile({
+          username,
+          agreed,
+          profileImage:
+            customImage ?? RNImage.resolveAssetSource(selectedAvatar).uri,
+        })
+      );
+
+      hideToast();
+      showSuccess("Profile Created", "Profile Creatd Successfully");
+
+      router.push("/dashboard");
+    } catch (err: any) {
+      hideToast();
+
+      const errorMessage =
+        err && typeof err === "object" && "message" in err
+          ? (err as any).message
+          : "Something went wrong";
+      showError("Failed to creating Profile", errorMessage);
+    }
   };
 
   return (
@@ -112,14 +152,21 @@ export default function CreateProfileScreen() {
         <TouchableOpacity
           onPress={handleCreateProfile}
           disabled={!username || !agreed}
-          className={clsx(
-            "w-full py-3 rounded-lg mt-6",
-            agreed && username ? "bg-blue-600" : "bg-blue-300"
-          )}
+          className={`w-full py-3 rounded-lg mt-6 ${
+            createProfileLoading
+              ? "bg-blue-800"
+              : agreed && username
+              ? "bg-blue-600"
+              : "bg-blue-300"
+          }`}
         >
-          <Text className="text-white text-center text-[15px] font-semibold">
-            Create Profile
-          </Text>
+          {createProfileLoading ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Text className="text-white text-center text-[15px] font-semibold">
+              Create Profile
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>
