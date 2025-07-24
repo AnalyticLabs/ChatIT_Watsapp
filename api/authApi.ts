@@ -40,3 +40,49 @@ export const verifyOtpAPI = async ({
     throw error;
   }
 };
+
+export const createProfileAPI = async ({
+  username,
+  agreed,
+  profileImage,
+}: {
+  username: string;
+  agreed: boolean;
+  profileImage?: string | null;
+}) => {
+  const formData = new FormData();
+  formData.append("username", username);
+  formData.append("agreed", String(agreed));
+
+  if (profileImage) {
+    formData.append("profilePicture", {
+      uri: profileImage,
+      name: "avatar.jpg",
+      type: "image/jpeg",
+    } as any);
+  } else {
+    console.warn(
+      "Static avatars via `require` cannot be sent as FormData. Use a URI image."
+    );
+  }
+
+  try {
+    const response = await axiosInstance.post(
+      "/auth/create-profile",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.log(
+      "CreateProfileAPI failed:",
+      error?.response?.data || error.message
+    );
+    throw error;
+  }
+};
