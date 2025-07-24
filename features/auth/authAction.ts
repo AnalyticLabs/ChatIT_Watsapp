@@ -6,8 +6,11 @@ import {
   verifyOtpStart,
   verifyOtpSuccess,
   verifyOtpFailure,
+  createProfileStart,
+  createProfileSuccess,
+  createProfileFailure,
 } from "./authSlice";
-import { sendOtpAPI, verifyOtpAPI } from "../../api/authApi";
+import { createProfileAPI, sendOtpAPI, verifyOtpAPI } from "../../api/authApi";
 
 export const sendOtp = (payload: {
   phoneNumber: string;
@@ -47,6 +50,34 @@ export const verifyOtp = ({
         error.response?.data?.message || "OTP verification failed";
       dispatch(verifyOtpFailure(message));
       throw error;
+    }
+  };
+};
+
+export const createProfile = ({
+  username,
+  agreed,
+  profileImage,
+}: {
+  username: string;
+  agreed: boolean;
+  profileImage?: string | null;
+}) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch(createProfileStart());
+      const response = await createProfileAPI({
+        username,
+        agreed,
+        profileImage,
+      });
+      dispatch(createProfileSuccess());
+      return response;
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || "Profile creation failed";
+      dispatch(createProfileFailure(message));
+      throw new Error(message);
     }
   };
 };
