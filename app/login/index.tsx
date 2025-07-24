@@ -71,7 +71,7 @@ export default function LoginScreen() {
       }
 
       hideToast();
-      showSuccess("OTP Sent!", `OTP sent to ${countryCode} ${mobile}`);
+      showSuccess("OTP Sent", `OTP sent to ${countryCode} ${mobile}`);
 
       router.push({
         pathname: "/verify",
