@@ -1,4 +1,5 @@
 import axiosInstance from "~/config/axiosInstance";
+import * as mime from "react-native-mime-types";
 
 export const sendOtpAPI = async ({
   phoneNumber,
@@ -54,11 +55,13 @@ export const createProfileAPI = async ({
   formData.append("username", username);
   formData.append("agreed", String(agreed));
 
+  const fileType = profileImage ? mime.lookup(profileImage) : undefined;
+
   if (profileImage) {
     formData.append("profilePicture", {
       uri: profileImage,
       name: "avatar.jpg",
-      type: "image/jpeg",
+      type: fileType || "image/jpeg",
     } as any);
   } else {
     console.warn(
