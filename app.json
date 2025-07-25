@@ -15,21 +15,30 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow Chatit to access your camera.",
+        "NSPhotoLibraryUsageDescription": "Allow Chatit to access your photo library."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/Chatit.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.Chatit"
+      "package": "com.anonymous.Chatit",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/Chatit.png"
     },
-    "plugins": ["expo-router"],
+    "plugins": ["expo-router", "expo-image-picker"],
     "experiments": {
       "typedRoutes": true
     }
