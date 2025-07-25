@@ -15,7 +15,7 @@ import { Checkbox } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "~/store";
 import { createProfile } from "~/features/auth/authAction";
-import { hideToast, showError, showSuccess } from "~/utils/toast";
+import { hideToast, showError } from "~/utils/toast";
 import { Image as RNImage } from "react-native";
 
 const avatars = [
@@ -38,9 +38,9 @@ export default function CreateProfileScreen() {
   );
 
   const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      aspect: [1, 1],
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      aspect: [4, 3],
       quality: 1,
       allowsEditing: true,
     });
@@ -62,9 +62,6 @@ export default function CreateProfileScreen() {
             customImage ?? RNImage.resolveAssetSource(selectedAvatar).uri,
         })
       );
-
-      hideToast();
-      showSuccess("Profile Created", "Profile Creatd Successfully");
 
       router.push("/dashboard");
     } catch (err: any) {
