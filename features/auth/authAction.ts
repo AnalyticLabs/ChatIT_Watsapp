@@ -9,8 +9,39 @@ import {
   createProfileStart,
   createProfileSuccess,
   createProfileFailure,
+  setAuth,
+  clearAuth,
 } from "./authSlice";
 import { createProfileAPI, sendOtpAPI, verifyOtpAPI } from "../../api/authApi";
+import {
+  clearAuthFromStorage,
+  getAuthFromStorage,
+  saveAuthToStorage,
+} from "~/utils/authStorage";
+
+// App start auth loader
+export const loadAuth = () => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const auth = await getAuthFromStorage();
+      if (auth?.token && auth?.user) {
+        dispatch(setAuth(auth));
+      } else {
+        dispatch(clearAuth());
+      }
+    } catch (e) {
+      dispatch(clearAuth());
+    }
+  };
+};
+
+// Logout function
+export const logout = () => {
+  return async (dispatch: AppDispatch) => {
+    await clearAuthFromStorage();
+    dispatch(clearAuth());
+  };
+};
 
 export const sendOtp = (payload: {
   phoneNumber: string;
@@ -43,6 +74,10 @@ export const verifyOtp = ({
     try {
       dispatch(verifyOtpStart());
       const res = await verifyOtpAPI({ phoneNumber, phoneSuffix, otp });
+      const { token, user } = res.data;
+
+      // Save to AsyncStorage
+      await saveAuthToStorage(token, user);
       dispatch(verifyOtpSuccess());
       return res;
     } catch (error: any) {
