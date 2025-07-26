@@ -18,6 +18,7 @@ import { Provider } from "react-redux";
 import { store } from "~/store/index";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "~/utils/toastConfig";
+import AuthGate from "~/components/AuthGate";
 
 export default function RootLayout() {
   const hasMounted = React.useRef(false);
@@ -42,41 +43,46 @@ export default function RootLayout() {
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
         <SafeAreaView style={styles.safeArea}>
           <ThemeWrapper>
-            <Stack
-              screenOptions={{
-                headerTitle: ({ children }) => (
-                  <HeaderTitle title={children as string} />
-                ),
-              }}
-            >
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-              <Stack.Screen name="login" options={{ headerShown: false }} />
-              <Stack.Screen name="verify" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="dashboard"
-                options={{
-                  header: () => <DashboardHeader />,
+            <AuthGate>
+              <Stack
+                screenOptions={{
+                  headerTitle: ({ children }) => (
+                    <HeaderTitle title={children as string} />
+                  ),
                 }}
-              />
-              <Stack.Screen
-                name="chatscreen"
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name="createprofilescreen"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="groupchat"
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen name="call" options={{ headerShown: false }} />
-              <Stack.Screen name="groupcall" options={{ headerShown: false }} />
-            </Stack>
+              >
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="login" options={{ headerShown: false }} />
+                <Stack.Screen name="verify" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="dashboard"
+                  options={{
+                    header: () => <DashboardHeader />,
+                  }}
+                />
+                <Stack.Screen
+                  name="chatscreen"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="createprofilescreen"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="groupchat"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen name="call" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="groupcall"
+                  options={{ headerShown: false }}
+                />
+              </Stack>
+            </AuthGate>
             <PortalHost />
           </ThemeWrapper>
           <Toast config={toastConfig} />
