@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface AuthState {
+  token: string | null;
+  user: any | null;
+  isAuthLoaded: boolean;
   sendOtpLoading: boolean;
   verifyOtpLoading: boolean;
   createProfileLoading: boolean;
@@ -8,6 +11,9 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
+  token: null,
+  user: null,
+  isAuthLoaded: false,
   sendOtpLoading: false,
   verifyOtpLoading: false,
   createProfileLoading: false,
@@ -18,7 +24,25 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    /* SendOTP Slices */
+    // Set auth on app load or after login
+    setAuth: (state, action) => {
+      state.token = action.payload.token;
+      state.user = action.payload.user;
+      state.isAuthLoaded = true;
+    },
+
+    // Clear auth on logout
+    clearAuth: (state) => {
+      state.token = null;
+      state.user = null;
+      state.isAuthLoaded = true;
+    },
+
+    setAuthLoaded: (state) => {
+      state.isAuthLoaded = true;
+    },
+
+    /* Send OTP */
     sendOtpStart: (state) => {
       state.sendOtpLoading = true;
       state.error = null;
@@ -31,7 +55,7 @@ const authSlice = createSlice({
       state.error = action.payload;
     },
 
-    /* VerifyOTP Slices */
+    /* Verify OTP */
     verifyOtpStart: (state) => {
       state.verifyOtpLoading = true;
       state.error = null;
@@ -44,7 +68,7 @@ const authSlice = createSlice({
       state.error = action.payload;
     },
 
-    /* CreateProfile Slices */
+    /* Create Profile */
     createProfileStart: (state) => {
       state.createProfileLoading = true;
       state.error = null;
@@ -60,6 +84,8 @@ const authSlice = createSlice({
 });
 
 export const {
+  setAuth,
+  clearAuth,
   sendOtpStart,
   sendOtpSuccess,
   sendOtpFailure,
