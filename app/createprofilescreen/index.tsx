@@ -63,7 +63,7 @@ export default function CreateProfileScreen() {
         })
       );
 
-      router.push("/dashboard");
+      router.replace("/dashboard");
     } catch (err: any) {
       hideToast();
 
@@ -154,7 +154,7 @@ export default function CreateProfileScreen() {
               ? "bg-blue-800"
               : agreed && username
               ? "bg-blue-600"
-              : "bg-blue-300"
+              : "bg-gray-500"
           }`}
         >
           {createProfileLoading ? (

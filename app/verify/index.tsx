@@ -78,7 +78,7 @@ export default function VerifyScreen() {
       );
       hideToast();
       showSuccess("Verified", "OTP Verified succesfully");
-      router.push("/createprofilescreen");
+      router.replace("/createprofilescreen");
     } catch (err: any) {
       hideToast();
 
