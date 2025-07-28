@@ -28,7 +28,6 @@ export function MoreDetails() {
       icon: "log-out",
       onPress: async () => {
         await dispatch(logout());
-        console.log("Auth cleared. Navigating to /");
 
         setTimeout(() => {
           router.replace("/");

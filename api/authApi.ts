@@ -89,3 +89,39 @@ export const createProfileAPI = async ({
     throw error;
   }
 };
+
+// CHECK AUTH
+export const checkAuthAPI = async () => {
+  try {
+    const response = await axiosInstance.get("/auth/check-auth");
+    return response.data;
+  } catch (error: any) {
+    console.log("CheckAuthAPI failed:", error?.response?.data || error.message);
+    throw error;
+  }
+};
+
+// GET ALL USERS
+export const getAllUsersAPI = async () => {
+  try {
+    const response = await axiosInstance.get("/auth/users");
+    return response.data;
+  } catch (error: any) {
+    console.log(
+      "GetAllUsersAPI failed:",
+      error?.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+// LOGOUT
+export const logoutAPI = async () => {
+  try {
+    const response = await axiosInstance.post("/auth/logout");
+    return response.data;
+  } catch (error: any) {
+    console.log("LogoutAPI failed:", error?.response?.data || error.message);
+    throw error;
+  }
+};
