@@ -1,5 +1,5 @@
-import { Link, Stack } from "expo-router";
-import { View } from "react-native";
+import { router, Stack } from "expo-router";
+import { TouchableOpacity, View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { useColorScheme } from "~/lib/useColorScheme";
 
@@ -13,16 +13,18 @@ export default function NotFoundScreen() {
         <Text className="text-2xl font-bold mb-5">
           This screen doesn't exist.
         </Text>
-
-        <Link href="/" className="bg-blue-600 rounded-full px-6 py-3">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="bg-blue-600 rounded-full px-6 py-3"
+        >
           <Text
             className={`${
               isDarkColorScheme ? "text-white" : "text-black"
             } text-xl font-bold`}
           >
-            Go to home screen!
+            Go back
           </Text>
-        </Link>
+        </TouchableOpacity>
       </View>
     </>
   );
