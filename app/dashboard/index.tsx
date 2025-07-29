@@ -11,10 +11,13 @@ import {
 } from "~/features/dashboard/dashboardSlice";
 import { RootState } from "~/store";
 import AllProfile from "~/components/AllProfile";
+import { getAllUsers } from "~/features/auth/authAction";
+import { useRouter } from "expo-router";
 
 export default function ChatDashboardScreen() {
   const isDarkColorScheme = useColorScheme();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const activeTab = useSelector(
     (state: RootState) => state.dashboard.activeTab
@@ -271,15 +274,42 @@ export default function ChatDashboardScreen() {
 
   useEffect(() => {
     dispatch(setCalls(callHistoryData));
-    dispatch(setProfileData(allProfileData));
+
+    const fetchUsers = async () => {
+      try {
+        const res: any = await dispatch<any>(getAllUsers());
+        const mappedData = res.map((user: any) => ({
+          id: user._id,
+          name: user.username,
+          message: user.about || "Hey there! I’m using ChatIt",
+          time: "Just now",
+          avatar: user.profilePicture,
+        }));
+        dispatch(setProfileData(mappedData));
+      } catch (err) {
+        console.error("Failed to fetch users:", err);
+      }
+    };
+
+    fetchUsers();
   }, [dispatch]);
 
   const getFabIcon = () => {
     switch (activeTab) {
       case "Chats":
         return (
-          <Ionicons name="chatbubble-ellipses-outline" size={24} color="#fff" />
+          <TouchableOpacity
+            onPress={() => router.push("/contactlog")}
+            className="bg-blue-600 p-4 rounded-full shadow-md"
+          >
+            <Ionicons
+              name="chatbubble-ellipses-outline"
+              size={24}
+              color="#fff"
+            />
+          </TouchableOpacity>
         );
+
       case "Status":
         return (
           <View className="flex-row items-center gap-2">
@@ -295,13 +325,18 @@ export default function ChatDashboardScreen() {
             </TouchableOpacity>
           </View>
         );
+
       case "Calls":
-        return <Ionicons name="call-outline" size={24} color="#fff" />;
+        return (
+          <TouchableOpacity className="bg-blue-600 p-4 rounded-full shadow-md">
+            <Ionicons name="call-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+        );
+
       default:
         return null;
     }
   };
-
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-[#0e0c19]">
       {/* Top Tabs */}
@@ -391,15 +426,7 @@ export default function ChatDashboardScreen() {
             activeTab === "Status" ? "flex-row gap-4" : ""
           }`}
         >
-          <TouchableOpacity
-            className={`${
-              activeTab === "Status"
-                ? ""
-                : "bg-blue-600 p-4 rounded-full shadow-md"
-            }`}
-          >
-            {getFabIcon()}
-          </TouchableOpacity>
+          {getFabIcon()}
         </View>
       )}
     </SafeAreaView>
