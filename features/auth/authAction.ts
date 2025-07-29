@@ -11,8 +11,16 @@ import {
   createProfileFailure,
   setAuth,
   clearAuth,
+  getAllUsersStart,
+  getAllUsersSuccess,
+  getAllUsersFailure,
 } from "./authSlice";
-import { createProfileAPI, sendOtpAPI, verifyOtpAPI } from "../../api/authApi";
+import {
+  createProfileAPI,
+  sendOtpAPI,
+  verifyOtpAPI,
+  getAllUsersAPI,
+} from "../../api/authApi";
 import {
   clearAuthFromStorage,
   getAuthFromStorage,
@@ -113,6 +121,21 @@ export const createProfile = ({
         error.response?.data?.message || "Profile creation failed";
       dispatch(createProfileFailure(message));
       throw new Error(message);
+    }
+  };
+};
+
+export const getAllUsers = () => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch(getAllUsersStart());
+      const res = await getAllUsersAPI();
+      dispatch(getAllUsersSuccess(res.data));
+      return res.data;
+    } catch (error: any) {
+      const message = error?.response?.data?.message || "Failed to fetch users";
+      dispatch(getAllUsersFailure(message));
+      throw error;
     }
   };
 };

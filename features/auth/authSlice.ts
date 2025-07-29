@@ -7,6 +7,8 @@ interface AuthState {
   sendOtpLoading: boolean;
   verifyOtpLoading: boolean;
   createProfileLoading: boolean;
+  getAllUsersLoading: boolean;
+  users: any[];
   error: string | null;
 }
 
@@ -17,6 +19,8 @@ const initialState: AuthState = {
   sendOtpLoading: false,
   verifyOtpLoading: false,
   createProfileLoading: false,
+  getAllUsersLoading: false,
+  users: [],
   error: null,
 };
 
@@ -80,6 +84,19 @@ const authSlice = createSlice({
       state.createProfileLoading = false;
       state.error = action.payload;
     },
+
+    getAllUsersStart: (state) => {
+      state.getAllUsersLoading = true;
+      state.error = null;
+    },
+    getAllUsersSuccess: (state, action) => {
+      state.getAllUsersLoading = false;
+      state.users = action.payload;
+    },
+    getAllUsersFailure: (state, action) => {
+      state.getAllUsersLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -95,6 +112,9 @@ export const {
   createProfileStart,
   createProfileSuccess,
   createProfileFailure,
+  getAllUsersStart,
+  getAllUsersSuccess,
+  getAllUsersFailure,
 } = authSlice.actions;
 
 export default authSlice.reducer;
