@@ -81,6 +81,10 @@ export default function RootLayout() {
                   name="groupcall"
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="contactlog"
+                  options={{ headerShown: false }}
+                />
               </Stack>
             </AuthGate>
             <PortalHost />
