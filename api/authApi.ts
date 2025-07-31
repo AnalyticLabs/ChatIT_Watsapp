@@ -115,6 +115,17 @@ export const getAllUsersAPI = async () => {
   }
 };
 
+// GET LOGGED-IN USER
+export const getUserAPI = async () => {
+  try {
+    const response = await axiosInstance.get("/auth/get-user");
+    return response.data;
+  } catch (error: any) {
+    console.log("getUserAPI failed:", error?.response?.data || error.message);
+    throw error;
+  }
+};
+
 // LOGOUT
 export const logoutAPI = async () => {
   try {
