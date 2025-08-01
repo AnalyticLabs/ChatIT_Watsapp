@@ -5,7 +5,7 @@ type SendMessageParams = {
   content?: string;
   senderId: string;
   receiverId: string;
-  messageStatus: "send" | "delivered" | "read";
+  messageStatus: "sent" | "delivered" | "read";
   mediaUri?: string;
 };
 
@@ -23,6 +23,9 @@ export const sendMessageAPI = async ({
   formData.append("receiverId", receiverId);
   formData.append("messageStatus", messageStatus);
 
+  // if (content) {
+  //   formData.append("content", content);
+  // }
   if (content) {
     formData.append("content", content);
   }

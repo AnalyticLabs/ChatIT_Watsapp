@@ -9,6 +9,11 @@ import {
 import { ArrowLeft, Video, Phone, MoreVertical } from "lucide-react-native";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { useRouter } from "expo-router";
+import { useSelector } from "react-redux";
+import uuid from "react-native-uuid";
+import socket from "~/lib/socket/socket";
+import OngoingCall from "~/app/call/OngoingCall";
+import OngoingVideoCall from "~/app/call/OngoingVideoCall";
 
 interface ChatHeaderProps {
   name: string;
@@ -18,6 +23,7 @@ interface ChatHeaderProps {
   isGroup?: boolean;
   baseRoute?: string;
   chatId: string;
+  receiverId?: string; // optional if passed directly
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
@@ -28,29 +34,32 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   isGroup = false,
   baseRoute,
   chatId,
+  receiverId,
 }) => {
   const { width } = useWindowDimensions();
   const maxNameWidth = width - 170;
-
   const { isDarkColorScheme } = useColorScheme();
-
   const router = useRouter();
 
+  const user = useSelector((state: any) => state.auth.user); // get current user
   const routeBase = baseRoute || "/call";
 
-  const handleVideoClick = () => {
-    const callType = isGroup ? "groupvideo" : "video";
-    router.push({
-      pathname: routeBase as "/call" | "/groupcall",
-      params: { type: callType, id: chatId },
-    });
-  };
+  const handleCallStart = (type: "audio" | "video") => {
+    if (!user?._id || !receiverId) {
+    console.log("Missing user or receiverId");
+    return;
+  }
+    const roomId = uuid.v4();
 
-  const handleCallClick = () => {
-    const callType = isGroup ? "groupcall" : "call";
+    socket.emit("start_call", {
+      callType: type,
+      receiverId,
+      roomId,
+    });
+
     router.push({
-      pathname: routeBase as "/call" | "/groupcall",
-      params: { type: callType, id: chatId },
+      pathname: type === "video" ? "/call/OngoingVideoCall" : "/call/OngoingCall",
+      params: { id: roomId, receiverId: chatId },
     });
   };
 
@@ -88,10 +97,10 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 
       {/* Action Icons */}
       <View className="flex-row gap-5">
-        <TouchableOpacity onPress={handleVideoClick}>
+        <TouchableOpacity onPress={() => handleCallStart("video")}>
           <Video size={24} color={isDarkColorScheme ? "white" : "black"} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleCallClick}>
+        <TouchableOpacity onPress={() => handleCallStart("audio")}>
           <Phone size={23} color={isDarkColorScheme ? "white" : "black"} />
         </TouchableOpacity>
         <TouchableOpacity>

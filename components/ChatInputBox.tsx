@@ -111,7 +111,7 @@ export const ChatInputBox = ({ senderId, receiverId, socket, onMessageSent }: Pr
         senderId,
         receiverId,
         content: trimmedMessage,
-        messageStatus: "send",
+        messageStatus: "sent",
       });
 
       socket?.emit("send_message", newMessage);
@@ -138,7 +138,7 @@ export const ChatInputBox = ({ senderId, receiverId, socket, onMessageSent }: Pr
         const newMessage = await sendMessageAPI({
           senderId,
           receiverId,
-          messageStatus: "send",
+          messageStatus: "sent",
           mediaUri,
         });
 
