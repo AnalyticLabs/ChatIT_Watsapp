@@ -55,7 +55,7 @@ export default function ContactLogScreen() {
           id: user._id,
           name: user.username,
           message: user.about || "Hey there! I’m using ChatIt",
-          avatar: user.profilePicture,
+          avatar: user.avatar,
         }));
         dispatch(setProfileData(mappedData));
       } catch (err) {

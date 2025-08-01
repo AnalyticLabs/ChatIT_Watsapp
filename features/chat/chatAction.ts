@@ -30,7 +30,7 @@ export const sendMessage = (payload: {
   receiverId: string;
   content?: string;
   mediaUri?: string;
-  messageStatus: "send" | "delivered" | "read";
+  messageStatus: "sent" | "delivered" | "read";
 }) => {
   return async (dispatch: AppDispatch) => {
     try {
