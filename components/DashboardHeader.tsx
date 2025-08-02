@@ -132,6 +132,7 @@ import { RootState } from "~/store";
 import {
   deleteSelectedCalls,
   clearSelectedCalls,
+  setIsMoreDetailsOpen,
 } from "~/features/dashboard/dashboardSlice";
 
 export const DashboardHeader = () => {
@@ -170,6 +171,10 @@ export const DashboardHeader = () => {
 
   const shouldShowSearchBar = activeTab === "Chats";
 
+  const isMoreDetailsOpen = useSelector(
+    (state: RootState) => state.dashboard.isMoreDetailsOpen
+  );
+
   return (
     <View
       className="px-5 pt-12 pb-1"
@@ -205,7 +210,10 @@ export const DashboardHeader = () => {
               />
             </TouchableOpacity>
           ) : (
-            <MoreDetails />
+            <MoreDetails
+              isOpen={isMoreDetailsOpen}
+              setIsOpen={(val: boolean) => dispatch(setIsMoreDetailsOpen(val))}
+            />
           )}
         </View>
       </View>
