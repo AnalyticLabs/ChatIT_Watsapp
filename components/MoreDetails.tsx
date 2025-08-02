@@ -7,10 +7,15 @@ import { useRouter } from "expo-router";
 import { logout } from "~/features/auth/authAction";
 import { useAppDispatch } from "~/store";
 
-export function MoreDetails() {
+interface MoreDetailsProps {
+  isOpen: boolean;
+  setIsOpen: (val: boolean) => void;
+}
+
+export function MoreDetails({ isOpen, setIsOpen }: MoreDetailsProps) {
   const { colors } = useTheme();
   const { isDarkColorScheme } = useColorScheme();
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -38,7 +43,7 @@ export function MoreDetails() {
 
   return (
     <View className="relative">
-      <TouchableOpacity onPress={() => setIsOpen((prev) => !prev)}>
+      <TouchableOpacity onPress={() => setIsOpen(!isOpen)}>
         <Feather name="more-vertical" size={25} color={colors.text} />
       </TouchableOpacity>
 
