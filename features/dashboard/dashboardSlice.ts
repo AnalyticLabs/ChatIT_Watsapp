@@ -9,6 +9,7 @@ export interface CallItem {
   status: string;
   avatar: string;
   type: string;
+  createdAt: string;
 }
 
 export interface ChatProfileItem {
@@ -17,6 +18,17 @@ export interface ChatProfileItem {
   time: string;
   message: string;
   avatar: string;
+  createdAt: string;
+}
+
+export interface GroupItem {
+  id: string;
+  name: string;
+  message: string;
+  time: string;
+  avatar: string;
+  isGroup: true;
+  createdAt: string;
 }
 
 interface DashboardState {
@@ -24,6 +36,7 @@ interface DashboardState {
   selectedCallIds: string[];
   calls: CallItem[];
   profileData: ChatProfileItem[];
+  groups: GroupItem[];
   selectedChatId: string | null;
   searchText: string;
 }
@@ -33,6 +46,7 @@ const initialState: DashboardState = {
   selectedCallIds: [],
   calls: [],
   profileData: [],
+  groups: [],
   selectedChatId: null,
   searchText: "",
 };
@@ -49,6 +63,9 @@ const dashboardSlice = createSlice({
     },
     setProfileData(state, action: PayloadAction<ChatProfileItem[]>) {
       state.profileData = action.payload;
+    },
+    setGroups(state, action: PayloadAction<GroupItem[]>) {
+      state.groups = action.payload;
     },
     setSelectedChatId(state, action: PayloadAction<string | null>) {
       state.selectedChatId = action.payload;
@@ -80,6 +97,7 @@ export const {
   setActiveTab,
   setCalls,
   setProfileData,
+  setGroups,
   toggleSelectCall,
   clearSelectedCalls,
   deleteSelectedCalls,

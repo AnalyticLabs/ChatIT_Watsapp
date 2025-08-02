@@ -64,6 +64,13 @@ export default function ChatScreen() {
     setShowScrollToBottom(false);
   };
 
+  //   Get today's date for message date separator
+    const todayDate = new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+
   const handleScroll = (e: any) => {
     const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
     const isNearBottom =
@@ -157,33 +164,33 @@ export default function ChatScreen() {
 
   // Reaction modal handlers
   const openReactionModal = (msg: any) => {
-  if (msg.sender._id === currentUser?._id) return; // prevent reacting to own msg
-  setMessageToReact(msg);
-  setReactionModalVisible(true);
-};
+    if (msg.sender._id === currentUser?._id) return; // prevent reacting to own msg
+    setMessageToReact(msg);
+    setReactionModalVisible(true);
+  };
 
-const addReaction = (emoji: string) => {
-  if (!messageToReact || messageToReact.sender._id === currentUser._id) return;
+  const addReaction = (emoji: string) => {
+    if (!messageToReact || messageToReact.sender._id === currentUser._id) return;
 
-  setMessages((prevMessages) =>
-    prevMessages.map((m) => {
-      if (m._id === messageToReact._id) {
-        const userReactions = m.userReactions || {};
-        const current = userReactions[currentUser._id];
+    setMessages((prevMessages) =>
+      prevMessages.map((m) => {
+        if (m._id === messageToReact._id) {
+          const userReactions = m.userReactions || {};
+          const current = userReactions[currentUser._id];
 
-        const newUserReactions =
-          current === emoji
-            ? Object.fromEntries(Object.entries(userReactions).filter(([uid]) => uid !== currentUser._id))
-            : { ...userReactions, [currentUser._id]: emoji };
+          const newUserReactions =
+            current === emoji
+              ? Object.fromEntries(Object.entries(userReactions).filter(([uid]) => uid !== currentUser._id))
+              : { ...userReactions, [currentUser._id]: emoji };
 
-        return { ...m, userReactions: newUserReactions };
-      }
-      return m;
-    })
-  );
+          return { ...m, userReactions: newUserReactions };
+        }
+        return m;
+      })
+    );
 
-  setReactionModalVisible(false);
-};
+    setReactionModalVisible(false);
+  };
 
   // Aggregate reactions count from userReactions map
   const aggregateReactions = (userReactions: Record<string, string>) => {
@@ -297,11 +304,17 @@ const addReaction = (emoji: string) => {
               onScroll={handleScroll}
               scrollEventThrottle={16}
             >
+              {/* Example date separator, you can add logic to show dynamic dates */}
+              <View className="self-center bg-[#1f2c34] px-3 py-1 rounded-full my-2">
+                <Text className="text-white text-xs">{todayDate}</Text>
+              </View>
+
               {messages.map((msg, idx) => {
                 const mine = msg.sender._id === currentUser?._id;
                 const t = new Date(msg.createdAt).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
+                  hour12: true
                 });
                 const showRead = msg._id === lastReadId && !mine;
 
@@ -310,9 +323,8 @@ const addReaction = (emoji: string) => {
                     key={msg._id ?? idx}
                     onLongPress={() => onLongPressMessage(msg)}
                     onPress={() => openReactionModal(msg)}
-                    className={`mb-3 max-w-[80%] px-4 py-2 rounded-xl ${
-                      mine ? "self-end bg-blue-600" : "self-start bg-[#202c33]"
-                    }`}
+                    className={`mb-3 max-w-[80%] px-4 py-2 rounded-xl ${mine ? "self-end bg-blue-600" : "self-start bg-[#202c33]"
+                      }`}
                     style={{ position: "relative" }} // Important for badge position
                   >
                     {msg.contentType === "image" ? (
@@ -377,9 +389,8 @@ const addReaction = (emoji: string) => {
 
                     <View className="flex-row justify-end items-center mt-1">
                       <Text
-                        className={`text-xs ${
-                          mine ? "text-gray-100" : "text-gray-400"
-                        }`}
+                        className={`text-xs ${mine ? "text-gray-100" : "text-gray-400"
+                          }`}
                       >
                         {t} {mine && <MessageStatus status={msg.status} />}
                         {showRead && (

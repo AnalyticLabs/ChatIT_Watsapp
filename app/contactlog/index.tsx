@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "~/features/auth/authAction";
 import { setProfileData } from "~/features/dashboard/dashboardSlice";
 import { RootState } from "~/store";
+import { router } from "expo-router";
 
 const contacts = [
   {
@@ -78,7 +79,10 @@ export default function ContactLogScreen() {
 
       {/* Top Actions */}
       <View className="px-5 space-y-4 mt-4">
-        <TouchableOpacity className="flex-row items-center space-x-5 pb-3">
+        <TouchableOpacity
+          className="flex-row items-center space-x-5 pb-3"
+          onPress={() => router.push("/groupchat/CreateGroupScreen")}
+        >
           <View className="bg-blue-600 p-3 rounded-full">
             <Users size={24} color="white" />
           </View>
@@ -105,13 +109,17 @@ export default function ContactLogScreen() {
 
       {/* Contact List */}
       <ScrollView className="mt-2 px-1">
-        {filteredContacts.map((contact) => (
+        {filteredContacts.map((contact, index) => (
           <TouchableOpacity
             key={contact.id}
             className="flex-row items-center px-4 py-3 border-b border-gray-100 dark:border-gray-900"
           >
             <Image
-              source={{ uri: contact.avatar }}
+              source={{
+                uri: contact.avatar
+                  ? contact.avatar
+                  : `https://randomuser.me/api/portraits/men/${index+1}.jpg`
+              }}
               className="w-12 h-12 rounded-full mr-4"
             />
             <View className="flex-1">
