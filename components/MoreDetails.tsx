@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { View, Text, TouchableOpacity, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
@@ -15,7 +14,6 @@ interface MoreDetailsProps {
 export function MoreDetails({ isOpen, setIsOpen }: MoreDetailsProps) {
   const { colors } = useTheme();
   const { isDarkColorScheme } = useColorScheme();
-  // const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
