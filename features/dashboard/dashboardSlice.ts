@@ -39,6 +39,7 @@ interface DashboardState {
   groups: GroupItem[];
   selectedChatId: string | null;
   searchText: string;
+  isMoreDetailsOpen: boolean;
 }
 
 const initialState: DashboardState = {
@@ -49,6 +50,7 @@ const initialState: DashboardState = {
   groups: [],
   selectedChatId: null,
   searchText: "",
+  isMoreDetailsOpen: false,
 };
 
 const dashboardSlice = createSlice({
@@ -57,6 +59,9 @@ const dashboardSlice = createSlice({
   reducers: {
     setActiveTab(state, action: PayloadAction<TabType>) {
       state.activeTab = action.payload;
+    },
+    setIsMoreDetailsOpen: (state, action: PayloadAction<boolean>) => {
+      state.isMoreDetailsOpen = action.payload;
     },
     setCalls(state, action: PayloadAction<CallItem[]>) {
       state.calls = action.payload;
@@ -103,6 +108,7 @@ export const {
   deleteSelectedCalls,
   setSelectedChatId,
   setSearchText,
+  setIsMoreDetailsOpen,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;
