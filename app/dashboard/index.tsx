@@ -433,11 +433,6 @@
 //   );
 // }
 
-
-
-
-
-
 import React, { useEffect } from "react";
 import { View, SafeAreaView, TouchableOpacity, Text } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -447,10 +442,12 @@ import { useRouter } from "expo-router";
 import AllProfile from "~/components/AllProfile";
 import CallHistory from "~/components/CallHistory";
 import { loadDashboardData } from "~/features/dashboard/dashboardActions";
-import { setActiveTab } from "~/features/dashboard/dashboardSlice";
+import {
+  setActiveTab,
+  setIsMoreDetailsOpen,
+} from "~/features/dashboard/dashboardSlice";
 import { RootState } from "~/store";
 import { useColorScheme } from "~/lib/useColorScheme";
-
 
 export default function ChatDashboardScreen() {
   const dispatch = useDispatch<AppDispatch>();
@@ -463,7 +460,11 @@ export default function ChatDashboardScreen() {
   const groups = useSelector((s: RootState) => s.dashboard.groups);
   const searchText = useSelector((s: RootState) => s.dashboard.searchText);
 
-  const tabs: Array<"Chats" | "Status" | "Calls"> = ["Chats", "Status", "Calls"];
+  const tabs: Array<"Chats" | "Status" | "Calls"> = [
+    "Chats",
+    "Status",
+    "Calls",
+  ];
 
   useEffect(() => {
     dispatch(loadDashboardData());
@@ -486,14 +487,22 @@ export default function ChatDashboardScreen() {
             onPress={() => router.push("/contactlog")}
             className="bg-blue-600 p-4 rounded-full shadow-md"
           >
-            <Ionicons name="chatbubble-ellipses-outline" size={24} color="#fff" />
+            <Ionicons
+              name="chatbubble-ellipses-outline"
+              size={24}
+              color="#fff"
+            />
           </TouchableOpacity>
         );
       case "Status":
         return (
           <View className="flex-row items-center gap-2">
             <TouchableOpacity className="bg-gray-800 p-4 rounded-full shadow-md">
-              <MaterialCommunityIcons name="pencil-outline" size={24} color="#fff" />
+              <MaterialCommunityIcons
+                name="pencil-outline"
+                size={24}
+                color="#fff"
+              />
             </TouchableOpacity>
             <TouchableOpacity className="bg-blue-600 p-4 rounded-full shadow-md">
               <Ionicons name="camera-outline" size={24} color="#fff" />
@@ -511,8 +520,19 @@ export default function ChatDashboardScreen() {
     }
   };
 
+  const isMoreDetailsOpen = useSelector(
+    (state: RootState) => state.dashboard.isMoreDetailsOpen
+  );
+
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-[#0e0c19]">
+    <SafeAreaView
+      onTouchStart={() => {
+        if (isMoreDetailsOpen) {
+          dispatch(setIsMoreDetailsOpen(false));
+        }
+      }}
+      className="flex-1 bg-white dark:bg-[#0e0c19]"
+    >
       {/* Top Tabs */}
       <View
         className="flex-row justify-between bg-white dark:bg-[#0e0c19] shadow-md"
