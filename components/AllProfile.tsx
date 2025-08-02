@@ -114,8 +114,8 @@ export default function AllProfile({ data }: AllProfileProps) {
       <Image
         source={{
                 uri: item.avatar
-                  ? item.avatar
-                  : `https://randomuser.me/api/portraits/men/${1}.jpg`
+                  // ? item.avatar
+                  // : `https://randomuser.me/api/portraits/men/${1}.jpg`
               }}
         className="w-12 h-12 rounded-full mr-3"
       />

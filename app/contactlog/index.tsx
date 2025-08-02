@@ -117,8 +117,8 @@ export default function ContactLogScreen() {
             <Image
               source={{
                 uri: contact.avatar
-                  ? contact.avatar
-                  : `https://randomuser.me/api/portraits/men/${index+1}.jpg`
+                  // ? contact.avatar
+                  // : `https://randomuser.me/api/portraits/men/${index+1}.jpg`
               }}
               className="w-12 h-12 rounded-full mr-4"
             />

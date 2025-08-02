@@ -172,6 +172,11 @@ export default function GroupChatScreen({ groupId }: GroupChatScreenProps) {
         (state: RootState) => state.groupChat.getGroupMessagesLoading
     );
 
+    const [groupInfo, setGroupInfo] = useState<{
+        name: string;
+        profilePicture: string;
+    } | null>(null);
+
     // Local UI state
     const [showScrollToBottom, setShowScrollToBottom] = useState(false);
     const [typingUsers, setTypingUsers] = useState<string[]>([]); // placeholder for typing indicator
@@ -180,6 +185,21 @@ export default function GroupChatScreen({ groupId }: GroupChatScreenProps) {
     useEffect(() => {
         dispatch(fetchGroupMessages(groupId));
     }, [dispatch, groupId]);
+
+    useEffect(() => {
+        const fetchGroupInfo = async () => {
+            try {
+                // console.log("Sending groupId to getGroupInfoAPI:", groupId);
+                const response = await getGroupInfoAPI(groupId);
+                // console.log("Group info API response:", response.data);
+                setGroupInfo(response.data); // { name: 'Wybble Team', imageUrl: 'https://...jpg' }
+            } catch (err) {
+                console.error("Error fetching group info:", err);
+            }
+        };
+
+        if (groupId) fetchGroupInfo();
+    }, [groupId]);
 
     const currentTime = new Date().toLocaleTimeString([], {
         hour: "2-digit",
@@ -257,86 +277,92 @@ export default function GroupChatScreen({ groupId }: GroupChatScreenProps) {
                     maxWidth: "80%",
                 }}
             >
-                {/* Sender name above message if not current user */}
+                {/* Sender name above message */}
                 {(
-                    <Text style={{ fontWeight: "bold", fontSize: 12, color: "black", marginBottom: 4 }}>
-                        {message.sender.username}
-                    </Text>
+                    isMe && message.sender.username ? (
+                        <Text style={{ fontWeight: "bold", fontSize: 12, color: "black", marginBottom: 4 }}>
+                            {message.sender.username}
+                        </Text>) 
+                        : (
+                        <Text style={{ fontWeight: "bold", fontSize: 12, color: "gray", marginBottom: 4 }}>
+                            {message.sender.username}
+                        </Text>    
+                        )
                 )}
 
-                {/* Message text */}
-                {/* <Text style={{ color: "#fff", fontSize: 16 }}>{message.content}</Text> */}
+                            {/* Message text */}
+                            {/* <Text style={{ color: "#fff", fontSize: 16 }}>{message.content}</Text> */}
 
-                
-                    {message.contentType === "image" ? (
-                        <Pressable
-                            onPress={() => {
-                                setImageToShow(message.imageOrVideoUrl ?? null);
-                                setImageModalVisible(true);
-                            }}
-                        >
-                            <Image
-                                source={{ uri: message.imageOrVideoUrl ?? "" }}
-                                style={{ width: 200, height: 200, borderRadius: 10 }}
-                                resizeMode={ResizeMode.COVER}
-                            />
-                        </Pressable>
-                    ) : message.contentType === "video" ? (
-                        <Pressable
-                            onPress={() => {
-                                setVideoToPlay(message.imageOrVideoUrl ?? null);
-                                setVideoModalVisible(true);
-                            }}
-                        >
-                            <Video
-                                source={{ uri: message.imageOrVideoUrl ?? "" }}
-                                style={{ width: 200, height: 200, borderRadius: 10 }}
-                                resizeMode={ResizeMode.COVER}
-                                shouldPlay={false}
-                                isMuted
-                            />
-                            <View
-                                style={{
-                                    position: "absolute",
-                                    top: 0,
-                                    left: 0,
-                                    width: 200,
-                                    height: 200,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        backgroundColor: "rgba(0,0,0,0.6)",
-                                        width: 48,
-                                        height: 48,
-                                        borderRadius: 24,
-                                        justifyContent: "center",
-                                        alignItems: "center",
+
+                            {message.contentType === "image" ? (
+                                <Pressable
+                                    onPress={() => {
+                                        setImageToShow(message.imageOrVideoUrl ?? null);
+                                        setImageModalVisible(true);
                                     }}
                                 >
-                                    <Text style={{ color: "white", fontSize: 24 }}>▶</Text>
-                                </View>
-                            </View>
+                                    <Image
+                                        source={{ uri: message.imageOrVideoUrl ?? "" }}
+                                        style={{ width: 200, height: 200, borderRadius: 10 }}
+                                        resizeMode={ResizeMode.COVER}
+                                    />
+                                </Pressable>
+                            ) : message.contentType === "video" ? (
+                                <Pressable
+                                    onPress={() => {
+                                        setVideoToPlay(message.imageOrVideoUrl ?? null);
+                                        setVideoModalVisible(true);
+                                    }}
+                                >
+                                    <Video
+                                        source={{ uri: message.imageOrVideoUrl ?? "" }}
+                                        style={{ width: 200, height: 200, borderRadius: 10 }}
+                                        resizeMode={ResizeMode.COVER}
+                                        shouldPlay={false}
+                                        isMuted
+                                    />
+                                    <View
+                                        style={{
+                                            position: "absolute",
+                                            top: 0,
+                                            left: 0,
+                                            width: 200,
+                                            height: 200,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                backgroundColor: "rgba(0,0,0,0.6)",
+                                                width: 48,
+                                                height: 48,
+                                                borderRadius: 24,
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Text style={{ color: "white", fontSize: 24 }}>▶</Text>
+                                        </View>
+                                    </View>
+                                </Pressable>
+                            ) : (
+                                <Text className="text-white text-base">{message.content}</Text>
+                            )}
+
+                            {/* Timestamp */}
+                            <Text style={{ color: "#ddd", fontSize: 12, marginTop: 4, textAlign: "right" }}>
+                                {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+                            </Text>
+
+                            {/* Read receipts below own messages */}
+                            {isMe && message.readBy.length > 0 && (
+                                <Text style={{ fontSize: 10, color: "#a0aec0", marginTop: 2 }}>
+                                    Read by {message.readBy.map((u) => u.name).join(", ")}
+                                </Text>
+                            )}
                         </Pressable>
-                    ) : (
-                        <Text className="text-white text-base">{message.content}</Text>
-                    )}
-
-                    {/* Timestamp */}
-                    <Text style={{ color: "#ddd", fontSize: 12, marginTop: 4, textAlign: "right" }}>
-                        {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
-                    </Text>
-
-                    {/* Read receipts below own messages */}
-                    {isMe && message.readBy.length > 0 && (
-                        <Text style={{ fontSize: 10, color: "#a0aec0", marginTop: 2 }}>
-                            Read by {message.readBy.map((u) => u.name).join(", ")}
-                        </Text>
-                    )}
-                </Pressable>
-                );
+                    );
     };
 
 
@@ -470,9 +496,13 @@ export default function GroupChatScreen({ groupId }: GroupChatScreenProps) {
                 <SafeAreaView className="flex-1 bg-white dark:bg-[#0e0c19]">
                     {/* Header */}
                     <ChatHeader
-                        name="Wybble Team"
+                        name={groupInfo?.name || "Group Chat"}
                         time={currentTime}
-                        imageUrl={require("../../assets/images/wybble-team.png")}
+                        imageUrl={
+                            groupInfo?.profilePicture
+                                ? { uri: groupInfo.profilePicture }
+                                : require("../../assets/images/wybble-team.png")
+                        }
                         onBack={() => router.back()}
                         isGroup={true}
                         baseRoute="/groupcall"

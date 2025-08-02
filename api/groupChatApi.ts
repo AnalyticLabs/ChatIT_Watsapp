@@ -110,7 +110,7 @@ export const deleteGroupAPI = async (groupId: string) => {
 export const getGroupInfoAPI = async (groupId: string) => {
   try {
     const response = await axiosInstance.get(`/group/group-info/${groupId}`);
-    return response.data.data;
+    return response.data;
   } catch (error: any) {
     console.error("getGroupInfoAPI error:", error?.response?.data || error.message);
     throw error;
