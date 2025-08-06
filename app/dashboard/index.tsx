@@ -448,6 +448,7 @@ import {
 } from "~/features/dashboard/dashboardSlice";
 import { RootState } from "~/store";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { getAuthFromStorage } from "~/utils/authStorage";
 
 export default function ChatDashboardScreen() {
   const dispatch = useDispatch<AppDispatch>();
@@ -466,9 +467,22 @@ export default function ChatDashboardScreen() {
     "Calls",
   ];
 
+  // useEffect(() => {
+  //   dispatch(loadDashboardData());
+  // }, [dispatch]);
+
   useEffect(() => {
-    dispatch(loadDashboardData());
-  }, [dispatch]);
+    const init = async () => {
+      const token = await getAuthFromStorage();
+      if (token) {
+        dispatch(loadDashboardData());
+      } else {
+        console.warn("🚫 No token found in storage");
+      }
+    };
+
+    init();
+  }, []);
 
   const mergedChats = [
     ...groups.filter((g) =>

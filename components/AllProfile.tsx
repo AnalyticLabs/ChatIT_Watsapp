@@ -63,16 +63,8 @@
 //   );
 // }
 
-
-
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
@@ -113,25 +105,60 @@ export default function AllProfile({ data }: AllProfileProps) {
     >
       <Image
         source={{
-                uri: item.avatar
-                  // ? item.avatar
-                  // : `https://randomuser.me/api/portraits/men/${1}.jpg`
-              }}
+          uri: item.avatar,
+          // ? item.avatar
+          // : `https://randomuser.me/api/portraits/men/${1}.jpg`
+        }}
         className="w-12 h-12 rounded-full mr-3"
       />
       <View className="flex-1">
-        <View className="flex-row justify-between">
+        {/* <View className="flex-row justify-between">
           <Text className="text-[16px] font-semibold text-black dark:text-white">
             {item.name}
           </Text>
           {item.isGroup && (
-            <Text className="text-xs text-blue-600 font-medium border px-2 py-1 rounded-3xl border-blue-400">Group</Text>
+            <Text className="text-xs text-blue-600 font-medium border px-2 py-1 rounded-3xl border-blue-400">
+              Group
+            </Text>
           )}
           <Text className="text-xs text-gray-500">
-            {item.time || new Date(item.createdAt || "").toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+            {item.time ||
+              new Date(item.createdAt || "").toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })}
+          </Text>
+        </View> */}
+
+        <View className="flex-row justify-between items-center">
+          {/* Group name and badge */}
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-[16px] font-semibold text-black dark:text-white">
+              {item.name}
+            </Text>
+            {item.isGroup && (
+              <Text className="ml-2 text-xs text-blue-600 font-medium border px-2 py-1 rounded-3xl border-blue-400">
+                Group
+              </Text>
+            )}
+          </View>
+
+          {/* Time */}
+          <Text className="text-xs text-gray-500">
+            {item.time ||
+              new Date(item.createdAt || "").toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })}
           </Text>
         </View>
-        <Text className="text-sm text-gray-600 dark:text-gray-400" numberOfLines={1}>
+
+        <Text
+          className="text-sm text-gray-600 dark:text-gray-400"
+          numberOfLines={1}
+        >
           {item.message}
         </Text>
       </View>
@@ -139,7 +166,10 @@ export default function AllProfile({ data }: AllProfileProps) {
   );
 
   return (
-    <SafeAreaView edges={["left", "right"]} className="flex-1 bg-white dark:bg-black">
+    <SafeAreaView
+      edges={["left", "right"]}
+      className="flex-1 bg-white dark:bg-black"
+    >
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}

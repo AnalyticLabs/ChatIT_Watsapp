@@ -14,6 +14,8 @@ import {
   getAllUsersStart,
   getAllUsersSuccess,
   getAllUsersFailure,
+  setToken,
+  setUser,
 } from "./authSlice";
 import {
   createProfileAPI,
@@ -69,6 +71,34 @@ export const sendOtp = (payload: {
   };
 };
 
+// export const verifyOtp = ({
+//   phoneNumber,
+//   phoneSuffix,
+//   otp,
+// }: {
+//   phoneNumber: string;
+//   phoneSuffix: string;
+//   otp: string;
+// }) => {
+//   return async (dispatch: AppDispatch) => {
+//     try {
+//       dispatch(verifyOtpStart());
+//       const res = await verifyOtpAPI({ phoneNumber, phoneSuffix, otp });
+//       const { token, user } = res.data;
+
+//       // Save to AsyncStorage
+//       await saveAuthToStorage(token, user);
+//       dispatch(verifyOtpSuccess());
+//       return res;
+//     } catch (error: any) {
+//       const message =
+//         error.response?.data?.message || "OTP verification failed";
+//       dispatch(verifyOtpFailure(message));
+//       throw error;
+//     }
+//   };
+// };
+
 export const verifyOtp = ({
   phoneNumber,
   phoneSuffix,
@@ -84,9 +114,15 @@ export const verifyOtp = ({
       const res = await verifyOtpAPI({ phoneNumber, phoneSuffix, otp });
       const { token, user } = res.data;
 
-      // Save to AsyncStorage
+      // ✅ Save to AsyncStorage
       await saveAuthToStorage(token, user);
+
+      // ✅ Immediately update Redux store
+      dispatch(setToken(token));
+      dispatch(setUser(user));
+
       dispatch(verifyOtpSuccess());
+
       return res;
     } catch (error: any) {
       const message =

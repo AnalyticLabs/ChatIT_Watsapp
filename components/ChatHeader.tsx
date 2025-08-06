@@ -12,8 +12,6 @@ import { useRouter } from "expo-router";
 import { useSelector } from "react-redux";
 import uuid from "react-native-uuid";
 import socket from "~/lib/socket/socket";
-import OngoingCall from "~/app/call/OngoingCall";
-import OngoingVideoCall from "~/app/call/OngoingVideoCall";
 
 interface ChatHeaderProps {
   name: string;
@@ -46,9 +44,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 
   const handleCallStart = (type: "audio" | "video") => {
     if (!user?._id || !receiverId) {
-    console.log("Missing user or receiverId");
-    return;
-  }
+      console.log("Missing user or receiverId");
+      return;
+    }
     const roomId = uuid.v4();
 
     socket.emit("start_call", {
@@ -58,7 +56,8 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
     });
 
     router.push({
-      pathname: type === "video" ? "/call/OngoingVideoCall" : "/call/OngoingCall",
+      pathname:
+        type === "video" ? "/call/OngoingVideoCall" : "/call/OngoingCall",
       params: { id: roomId, receiverId: chatId },
     });
   };

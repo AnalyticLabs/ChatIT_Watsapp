@@ -42,6 +42,54 @@ export const verifyOtpAPI = async ({
   }
 };
 
+// export const createProfileAPI = async ({
+//   username,
+//   agreed,
+//   profileImage,
+// }: {
+//   username: string;
+//   agreed: boolean;
+//   profileImage?: string | null;
+// }) => {
+//   const formData = new FormData();
+//   formData.append("username", username);
+//   formData.append("agreed", String(agreed));
+
+//   const fileType = profileImage ? mime.lookup(profileImage) : undefined;
+
+//   if (profileImage) {
+//     formData.append("profilePicture", {
+//       uri: profileImage,
+//       name: profileImage?.split("/").pop() || "profile.jpg",
+//       type: fileType || "image/jpeg",
+//     } as any);
+//   } else {
+//     console.warn("Static avatars via `require` cannot be sent...");
+//   }
+
+//   try {
+//     const response = await axiosInstance.post(
+//       "/auth/create-profile",
+//       formData,
+//       {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//         },
+//       }
+//     );
+
+//     return response.data;
+//   } catch (error: any) {
+//     console.log(
+//       "CreateProfileAPI failed:",
+//       error?.response?.data || error.message
+//     );
+//     throw error;
+//   }
+// };
+
+// CHECK AUTH
+
 export const createProfileAPI = async ({
   username,
   agreed,
@@ -55,18 +103,24 @@ export const createProfileAPI = async ({
   formData.append("username", username);
   formData.append("agreed", String(agreed));
 
-  const fileType = profileImage ? mime.lookup(profileImage) : undefined;
-
   if (profileImage) {
-    formData.append("profilePicture", {
-      uri: profileImage,
-      name: "avatar.jpg",
-      type: fileType || "image/jpeg",
-    } as any);
-  } else {
-    console.warn(
-      "Static avatars via `require` cannot be sent as FormData. Use a URI image."
-    );
+    const isGalleryImage = profileImage.startsWith("file://");
+
+    if (isGalleryImage) {
+      const fileExtension = profileImage.split(".").pop();
+      const mimeType = fileExtension
+        ? mime.lookup(fileExtension)
+        : "image/jpeg";
+
+      formData.append("profilePicture", {
+        uri: profileImage,
+        name: `profile.${fileExtension || "jpg"}`,
+        type: mimeType || "image/jpeg",
+      } as any);
+    } else {
+      // Static avatar, send as string
+      formData.append("profilePicture", profileImage);
+    }
   }
 
   try {
@@ -90,7 +144,6 @@ export const createProfileAPI = async ({
   }
 };
 
-// CHECK AUTH
 export const checkAuthAPI = async () => {
   try {
     const response = await axiosInstance.get("/auth/check-auth");

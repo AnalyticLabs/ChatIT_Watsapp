@@ -17,6 +17,7 @@ import { RootState } from "~/store";
 import { createProfile } from "~/features/auth/authAction";
 import { hideToast, showError } from "~/utils/toast";
 import { Image as RNImage } from "react-native";
+import * as ImageManipulator from "expo-image-manipulator";
 
 const avatars = [
   require("../../assets/images/avatar1.png"),
@@ -39,14 +40,23 @@ export default function CreateProfileScreen() {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      aspect: [4, 3],
-      quality: 1,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1, // max quality since we'll compress manually
     });
 
     if (!result.canceled) {
-      setCustomImage(result.assets[0].uri);
+      const selected = result.assets[0];
+
+      // ✅ Resize & compress image
+      const compressed = await ImageManipulator.manipulateAsync(
+        selected.uri,
+        [{ resize: { width: 1000 } }], // Resize to 1000px width (adjustable)
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+
+      setCustomImage(compressed.uri); // use compressed image
     }
   };
 
