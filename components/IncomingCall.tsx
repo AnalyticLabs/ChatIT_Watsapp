@@ -57,7 +57,9 @@
 //         <Text className="text-black dark:text-white text-xl font-semibold mb-1">
 //           {name}
 //         </Text>
-//         <Text className="text-gray-500 dark:text-gray-400 text-sm">Ringing...</Text>
+//         <Text className="text-gray-500 dark:text-gray-400 text-sm">
+//           Ringing...
+//         </Text>
 //       </View>
 
 //       <View className="flex-row justify-center gap-10 mb-10">
