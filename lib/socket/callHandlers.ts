@@ -18,7 +18,8 @@ export const setupCallSocketListeners = (
   socket?.on("call_accepted", ({ roomId, callType }: any) => {
     console.log("✅ Call Accepted", roomId);
     router.push({
-      pathname: callType === "video" ? "/call/OngoingVideoCall" : "/call/OngoingCall",
+      pathname:
+        callType === "video" ? "/call/OngoingVideoCall" : "/call/OngoingCall",
       params: { id: roomId },
     });
   });
