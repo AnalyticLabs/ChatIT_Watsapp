@@ -484,12 +484,21 @@ export default function ChatDashboardScreen() {
     init();
   }, []);
 
+  // const mergedChats = [
+  //   ...groups.filter((g) =>
+  //     g.name.toLowerCase().includes(searchText.toLowerCase())
+  //   ),
+  //   ...profileData.filter((u) =>
+  //     u.name.toLowerCase().includes(searchText.toLowerCase())
+  //   ),
+  // ];
+
   const mergedChats = [
-    ...groups.filter((g) =>
-      g.name.toLowerCase().includes(searchText.toLowerCase())
+    ...(Array.isArray(groups) ? groups : []).filter((g) =>
+      (g?.name ?? "").toLowerCase().includes((searchText ?? "").toLowerCase())
     ),
-    ...profileData.filter((u) =>
-      u.name.toLowerCase().includes(searchText.toLowerCase())
+    ...(Array.isArray(profileData) ? profileData : []).filter((u) =>
+      (u?.name ?? "").toLowerCase().includes((searchText ?? "").toLowerCase())
     ),
   ];
 
@@ -582,7 +591,10 @@ export default function ChatDashboardScreen() {
         {activeTab === "Chats" && (
           <>
             {Array.isArray(mergedChats) && mergedChats.length > 0 ? (
-              <AllProfile data={mergedChats} />
+              // <AllProfile data={mergedChats} />
+              <AllProfile
+                data={mergedChats.filter((item) => item?.name && item?.id)}
+              />
             ) : (
               <View className="flex-1 justify-center items-center">
                 <Text className="text-gray-400 dark:text-gray-500 text-[15px] font-semibold mb-3">

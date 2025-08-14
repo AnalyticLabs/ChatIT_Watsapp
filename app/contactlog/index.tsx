@@ -7,6 +7,7 @@ import { getAllUsers } from "~/features/auth/authAction";
 import { setProfileData } from "~/features/dashboard/dashboardSlice";
 import { RootState } from "~/store";
 import { router } from "expo-router";
+// import { useLocalSearchParams } from "expo-router";
 
 // const contacts = [
 //   {
@@ -62,6 +63,12 @@ export default function ContactLogScreen() {
           message: user.about || "Hey there! I’m using ChatIt",
           avatar: user.avatar,
         }));
+        // const mappedData = res.map((user: any) => ({
+        //   id: user._id,
+        //   name: user.username,
+        //   message: user.about || "Hey there! I’m using ChatIt",
+        //   avatar: user.avatar,
+        // }));
         console.log("Mapped users:", mappedData);
         dispatch(setProfileData(mappedData));
       } catch (err) {
@@ -80,6 +87,10 @@ export default function ContactLogScreen() {
     contact.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // const { mode } = useLocalSearchParams();
+
+  // const isNewGroupMode = mode === "new-group";
+
   const handleContactPress = () => {
     router.replace("/chatscreen");
   };
@@ -90,11 +101,21 @@ export default function ContactLogScreen() {
         onSearch={setSearchQuery}
       />
 
+      {/* <ContactLogHeader
+        title={isNewGroupMode ? "New Group" : "Select Contact"}
+        subtitle={
+          isNewGroupMode ? "Add members" : `${profileContacts.length} contacts`
+        }
+        contactCount={profileContacts.length}
+        onSearch={setSearchQuery}
+      /> */}
+
       {/* Top Actions */}
       <View className="px-5 space-y-4 mt-4">
         <TouchableOpacity
           className="flex-row items-center space-x-5 pb-3"
           onPress={() => router.push("/groupchat/CreateGroupScreen")}
+          // onPress={() => router.push("/contactlog?mode=new-group")}
         >
           <View className="bg-blue-600 p-3 rounded-full">
             <Users size={24} color="white" />

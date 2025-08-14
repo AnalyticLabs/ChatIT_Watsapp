@@ -6,11 +6,15 @@ import { useRouter } from "expo-router";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 interface ContactLogHeaderProps {
-  contactCount: number;
+  // title?: string;
+  // subtitle?: string;
+  contactCount?: number;
   onSearch?: (query: string) => void;
 }
 
 export default function ContactLogHeader({
+  // title,
+  // subtitle,
   contactCount,
   onSearch,
 }: ContactLogHeaderProps) {
@@ -79,6 +83,14 @@ export default function ContactLogHeader({
                 {contactCount} contacts
               </Text>
             </View>
+            // <View>
+            //   <Text className="text-black dark:text-white text-lg font-semibold">
+            //     {title || "Select Contact"}
+            //   </Text>
+            //   <Text className="text-sm text-gray-700 dark:text-gray-400">
+            //     {subtitle || `${contactCount} contacts`}
+            //   </Text>
+            // </View>
           )}
         </View>
 

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
-  Alert,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
@@ -14,10 +14,16 @@ import { useSelector } from "react-redux";
 import { RootState } from "~/store";
 import { router } from "expo-router";
 import { createGroupAPI } from "~/api/groupChatApi";
-import mime from "mime"; // install if not already: npm install mime
+import mime from "mime";
+import { Camera, Users } from "lucide-react-native";
+import { useColorScheme } from "~/lib/useColorScheme";
+import { hideToast, showError } from "~/utils/toast";
+import * as ImageManipulator from "expo-image-manipulator";
 
 export default function CreateGroupScreen() {
-  const profileData = useSelector((state: RootState) => state.dashboard.profileData);
+  const profileData = useSelector(
+    (state: RootState) => state.dashboard.profileData
+  );
   const authUser = useSelector((state: RootState) => state.auth.user);
   const [groupName, setGroupName] = useState("");
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
@@ -41,16 +47,28 @@ export default function CreateGroupScreen() {
 
       if (!result.canceled) {
         const uri = result.assets[0].uri;
-        setGroupImage(uri);
+        // ✅ Resize & compress image
+        const compressed = await ImageManipulator.manipulateAsync(
+          uri,
+          [{ resize: { width: 1000 } }], // Resize to 1000px width (adjustable)
+          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+        );
+        setGroupImage(compressed.uri);
       }
     } catch (error) {
-      Alert.alert("Image Picker Error", "Failed to pick image.");
+      hideToast();
+
+      const errorMessage =
+        error && typeof error === "object" && "message" in error
+          ? (error as any).message
+          : "Something went wrong";
+      showError("Failed to send pick image", errorMessage);
     }
   };
 
   const handleCreateGroup = async () => {
     if (!groupName || selectedMembers.length < 2) {
-      Alert.alert("Group name & 2+ members required.");
+      showError("Invalid Group Details", "Please enter a valid details");
       return;
     }
 
@@ -74,89 +92,118 @@ export default function CreateGroupScreen() {
 
     try {
       setLoading(true);
-      const group = await createGroupAPI(formData);
-      Alert.alert("Group Created", group.name);
-      router.replace(`/contactlog`);
+      await createGroupAPI(formData);
+      router.replace(`/dashboard`);
     } catch (error) {
+      hideToast();
+
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : typeof error === "string"
-          ? error
-          : "Unknown error";
-      Alert.alert("Failed to create group", errorMessage);
+        error && typeof error === "object" && "message" in error
+          ? (error as any).message
+          : "Something went wrong";
+      showError("Failed to create Group", errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
+  const { isDarkColorScheme } = useColorScheme();
+
   return (
-    <View className="flex-1 bg-white dark:bg-[#0e0c19] px-5 pt-6">
-      <Text className="text-lg font-bold text-black dark:text-white mb-3">
-        Create New Group
-      </Text>
-
-      <TouchableOpacity
-        onPress={pickImage}
-        className="items-center justify-center mb-4"
+    <View className="flex-1 bg-white dark:bg-[#0e0c19] px-6 pt-10">
+      <ScrollView
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+          flexGrow: 1,
+          paddingBottom: 30,
+        }}
+        showsVerticalScrollIndicator={false}
       >
-        {groupImage ? (
-          <Image
-            source={{ uri: groupImage }}
-            className="w-24 h-24 rounded-full"
-          />
-        ) : (
-          <View className="w-24 h-24 rounded-full bg-gray-300 items-center justify-center">
-            <Text className="text-gray-700 dark:text-gray-900">Add Photo</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-
-      <TextInput
-        value={groupName}
-        onChangeText={setGroupName}
-        placeholder="Enter group name"
-        className="border rounded-md p-3 mb-4 bg-black dark:bg-white text-white dark:text-black"
-      />
-
-      <Text className="text-sm font-semibold mb-2 text-gray-600 dark:text-gray-300">
-        Select Members
-      </Text>
-
-      <ScrollView className="mb-4">
-        {profileData.map((user) => (
-          <TouchableOpacity
-            key={user.id}
-            onPress={() => toggleSelectMember(user.id)}
-            className="flex-row items-center py-2"
-          >
-            <Image
-              source={{ uri: user.avatar }}
-              className="w-10 h-10 rounded-full mr-3"
-            />
-            <Text className="text-black dark:text-white text-[16px] flex-1">
-              {user.name}
-            </Text>
-            {selectedMembers.includes(user.id) && (
-              <Text className="text-blue-600 font-bold">✔</Text>
-            )}
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      <TouchableOpacity
-        onPress={handleCreateGroup}
-        disabled={loading || !groupName || selectedMembers.length < 2}
-        className={`${
-          loading || !groupName || selectedMembers.length < 2
-            ? "bg-gray-400"
-            : "bg-blue-600"
-        } rounded-full py-3 items-center`}
-      >
-        <Text className="text-white font-bold">
-          {loading ? "Creating..." : "Create Group"}
+        <Text className="text-2xl font-bold text-black dark:text-white mb-6">
+          Create New Group
         </Text>
-      </TouchableOpacity>
+
+        <TouchableOpacity onPress={pickImage} className="mb-5">
+          {groupImage ? (
+            <Image
+              source={{ uri: groupImage }}
+              className="w-28 h-28 rounded-full border-2 border-blue-500"
+            />
+          ) : (
+            <View className="relative w-28 h-28">
+              <View className="w-full h-full rounded-full bg-gray-300 dark:bg-gray-600 items-center justify-center">
+                <Users
+                  size={40}
+                  color={isDarkColorScheme ? "white" : "#4B5563"}
+                />
+              </View>
+
+              <View className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-white dark:bg-black border border-gray-300 items-center justify-center shadow-md">
+                <Camera
+                  size={16}
+                  color={isDarkColorScheme ? "white" : "#4B5563"}
+                />
+              </View>
+            </View>
+          )}
+        </TouchableOpacity>
+
+        <TextInput
+          value={groupName}
+          onChangeText={setGroupName}
+          placeholder="Enter group name"
+          placeholderTextColor="#999"
+          className="w-full border border-gray-400 rounded-lg px-4 py-3 mb-6 text-black dark:text-white bg-white dark:bg-[#1e1b2e]"
+        />
+
+        <Text className="text-base font-semibold mb-3 text-gray-600 dark:text-gray-300 self-start">
+          Select Members
+        </Text>
+
+        <View className="w-full mb-6">
+          {profileData.map((user) => (
+            <TouchableOpacity
+              key={user.id}
+              onPress={() => toggleSelectMember(user.id)}
+              className={`flex-row items-center py-1 px-2 rounded-lg mb-2 ${
+                selectedMembers.includes(user.id)
+                  ? "bg-blue-100 dark:bg-blue-900"
+                  : "bg-transparent"
+              }`}
+            >
+              <Image
+                source={{ uri: user.avatar }}
+                className="w-10 h-10 rounded-full mr-3"
+              />
+              <Text className="text-[16px] text-black dark:text-white flex-1">
+                {user.name}
+              </Text>
+              {selectedMembers.includes(user.id) && (
+                <Text className="text-blue-600 font-bold">✔</Text>
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <TouchableOpacity
+          onPress={handleCreateGroup}
+          disabled={loading || !groupName || selectedMembers.length < 2}
+          className={`w-full rounded-full py-4 items-center shadow-md ${
+            loading
+              ? "bg-blue-800"
+              : !groupName || selectedMembers.length < 2
+              ? "bg-gray-400"
+              : "bg-blue-600"
+          }`}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Text className="text-white font-bold text-base">Create Group</Text>
+          )}
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }

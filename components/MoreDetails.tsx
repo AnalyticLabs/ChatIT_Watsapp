@@ -22,7 +22,11 @@ export function MoreDetails({ isOpen, setIsOpen }: MoreDetailsProps) {
     icon: "users" | "volume-2" | "star" | "settings" | "log-out";
     onPress?: () => void | Promise<void>;
   }[] = [
-    { label: "New group", icon: "users" },
+    {
+      label: "New group",
+      icon: "users",
+      onPress: () => router.push("/groupchat/CreateGroupScreen"),
+    },
     { label: "New broadcast", icon: "volume-2" },
     { label: "Starred messages", icon: "star" },
     { label: "Settings", icon: "settings" },
