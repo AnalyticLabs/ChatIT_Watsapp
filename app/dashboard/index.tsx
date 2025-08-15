@@ -495,10 +495,14 @@ export default function ChatDashboardScreen() {
 
   const mergedChats = [
     ...(Array.isArray(groups) ? groups : []).filter((g) =>
-      (g?.name ?? "").toLowerCase().includes((searchText ?? "").toLowerCase())
+      String(g?.name ?? "")
+        .toLowerCase()
+        .includes((searchText ?? "").toLowerCase())
     ),
     ...(Array.isArray(profileData) ? profileData : []).filter((u) =>
-      (u?.name ?? "").toLowerCase().includes((searchText ?? "").toLowerCase())
+      String(u?.name ?? "")
+        .toLowerCase()
+        .includes((searchText ?? "").toLowerCase())
     ),
   ];
 

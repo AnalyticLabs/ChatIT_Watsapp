@@ -83,8 +83,16 @@ export default function ContactLogScreen() {
   //   contact.name.toLowerCase().includes(searchQuery.toLowerCase())
   // );
 
-  const filteredContacts = profileContacts.filter((contact) =>
-    contact.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // const filteredContacts = profileContacts.filter((contact) =>
+  //   contact.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
+
+  const filteredContacts = (
+    Array.isArray(profileContacts) ? profileContacts : []
+  ).filter((contact) =>
+    (contact?.name ?? "")
+      .toLowerCase()
+      .includes((searchQuery ?? "").toLowerCase())
   );
 
   // const { mode } = useLocalSearchParams();
