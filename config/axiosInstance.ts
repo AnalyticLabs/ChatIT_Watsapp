@@ -17,6 +17,7 @@ import { store } from "~/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuthFromStorage } from "~/utils/authStorage";
 
+// Axios instance
 const axiosInstance = axios.create({
   baseURL: EXPO_BACKEND_URL,
   timeout: 10000,
