@@ -17,6 +17,7 @@ export const getMessagesService = async (data: any) => {
         throw error;
     }
 };
+
 export const sendMessageService = (payload: any) =>
     instance.post(`${URL.SEND_MESSAGE}`, payload, {
         headers: { "Content-Type": "application/json" },
@@ -29,7 +30,25 @@ export const createGroupService = (data) =>
 
 
 export const getUserGroupsService = () =>
-  instance.get(URL?.USER_GROUPS );
+    instance.get(URL?.USER_GROUPS);
+
+export const sendGroupMessageService = (payload: any) =>
+    instance.post(URL?.SEND_GROUP_MESSAGE, payload, {
+        headers: { "Content-Type": "application/json" },
+    });
+
+export const getGroupMessagesService = async (data: any) => {
+    const url = `${URL.GROUP_MESSAGES}/${data}`;
+    console.log(url, '→ getGroupMessagesService URL');
+
+    try {
+        const response = await instance.get(url);
+        return response;
+    } catch (error) {
+        console.log('getMessagesService error:', error?.response?.data || error);
+        throw error;
+    }
+}
 
 export const getPaymentCardService = () => instance.get(URL.PAYMENT_CARD);
 export const deletePaymentCardService = (query: any) => instance.delete(URL.PAYMENT_CARD + query);

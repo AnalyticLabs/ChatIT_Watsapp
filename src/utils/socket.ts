@@ -24,27 +24,27 @@ export const socket = io(SOCKET_SERVER, {
 });
 
 export const SocketIO = () => {
-  socket.connect();
-  socket.on('connect', () => {
-    logToConsole('socket connected', socket.id);
-    socket.emit('connect_user', { connect: true });
-    socket.on('disconnect', () => {
-      logToConsole('connection to server lost.');
-    });
-    socket.on('connect_error', async () => {
-      socket.auth = async cb => {
-        const token = await AsyncStorage.getItem(TOKEN_KEY);
-        cb({
-          token: token,
-        });
-      };
-      socket.connect();
-    });
-    socket.on('disconnect', reason => {
-      logToConsole('socket disconnected');
-      if (reason === 'io server disconnect') {
-        socket.connect();
-      }
-    });
-  });
+  // socket.connect();
+  // socket.on('connect', () => {
+  //   logToConsole('socket connected', socket.id);
+  //   socket.emit('connect_user', { connect: true });
+  //   socket.on('disconnect', () => {
+  //     logToConsole('connection to server lost.');
+  //   });
+  //   socket.on('connect_error', async () => {
+  //     socket.auth = async cb => {
+  //       const token = await AsyncStorage.getItem(TOKEN_KEY);
+  //       cb({
+  //         token: token,
+  //       });
+  //     };
+  //     socket.connect();
+  //   });
+  //   socket.on('disconnect', reason => {
+  //     logToConsole('socket disconnected');
+  //     if (reason === 'io server disconnect') {
+  //       socket.connect();
+  //     }
+  //   });
+  // });
 };

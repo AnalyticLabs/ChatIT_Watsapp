@@ -110,7 +110,7 @@ const StackNavigator = () => {
           component={StatusStackNavigator}
         />
         <BottomTabs.Screen
-          options={{ tabBarLabel: 'cart' }}
+          options={{ tabBarLabel: 'call' }}
           name={SCREENS.CallStackNavigator}
           component={CallStackNavigator}
         />

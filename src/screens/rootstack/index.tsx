@@ -43,6 +43,7 @@ import StackNavigator from '../stacks/bottom';
 import ChatScreen from '../Chats/ChatScreen';
 import ContactInfo from '../ContactInfo';
 import CreateGroupScreen from '../Chats/Group/CreateGroupScreen';
+import { setUnReadCountForMesage } from '../../redux/slices/home';
 
 // import Subscription from '../RenterDashboard/subscription';
 
@@ -101,25 +102,7 @@ const RootStack = () => {
         const token = await get(TOKEN_KEY);
         if (token !== null) {
             dispatch(setIsLoggedIn(true));
-            SocketIO();
-            dispatch(getProfileThunk());
-            dispatch(getPaymentCardThunk());
-            dispatch(getUserSubjectThunk());
-            dispatch(getproductSubCategoriesThunk());
-            dispatch(getVendorListingThunk({ query: '?limit=10&page=1' }));
-            dispatch(getVendorStoreListThunk({
-                query: `?filter=${encodeURIComponent(JSON.stringify({ search: '' }))}`,
-                cb: () => {
-                },
-            }))
-            dispatch(getProductCatListingThunk());
-            dispatch(getBrandListingThunk());
-            dispatch(getUserVerificationThunk());
-            dispatch(getNotificationListThunk({ query: '?type=renter' }));
-            dispatch(getVendorDetailThunk());
-            dispatch(getVendorItemThunk('?filter={}'));
-            // dispatch(getUserNotificationThunk(''));
-            getCart();
+            // SocketIO(); 
             socket.on(SocketEvent.UNREAD_COUNT_MESSAGE, data => {
                 dispatch(setUnReadCountForMesage(data?.payload));
             });

@@ -19,7 +19,7 @@ export const logOutService = async () => {
 };
 export const sendOTPService = (data: any) => publicReq.post(URL.SEND_OTP, data);
 export const verifyOTPService = (data: any) => publicReq.post(URL.VERIFY_OTP, data);
-export const getUsersService = () => instance.get(URL.USERS);
+export const getUsersService = () => instance.get(URL.GET_PROFILE);
 
 
 export const signUpService = (data: any) => publicReq.post(URL.SIGN_UP, data);

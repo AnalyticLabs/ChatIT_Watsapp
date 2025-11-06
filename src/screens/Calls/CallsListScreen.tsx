@@ -16,14 +16,18 @@ import {
   VideoSourceType,
   CameraDirection,
 } from 'react-native-agora';
+import { fontValue } from '../../utils/responsiveFonts';
 
 const appId = 'e27f4b2a708f492d840d64e6b136c2d8';
 const channelName = 'ChatIt';
 const token =
-  '007eJxTYDgjPFdn1u7H/BqXNQJmHlVq/cM0g79BcJ3VLYW967hvvnNXYEg1Mk8zSTJKNDewSDOxNEqxMDFIMTNJNUsyNDZLBnKN3J5lNAQyMuiIb2NmZIBAEJ+NwTkjscSzhIEBADqQHog=';
+  "007eJxTYMhdHudSw/SvIW5x24w2KUlhb47nr2Zc8n611OZZcvm0uesUGFKNzNNMkowSzQ0s0kwsjVIsTAxSzExSzZIMjc2SgdyONzyZDYGMDN/vSDIzMkAgiM/G4JyRWOJZwsAAAJUYIH0=";
 const uid = 0;
 
-const CallScreen = () => {
+const CallScreen = ({route}:any) => {
+  console.log(route,'----route');
+  
+  const {receiverPhone} = route.params;
   const agoraEngineRef = useRef<any>();
   const [joined, setJoined] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -182,8 +186,9 @@ const CallScreen = () => {
             backgroundColor: '#111',
           }}
         >
-          <Text style={{ color: '#fff' }}>
-            Waiting for another user to join...
+          <Text style={{ color: '#fff', textAlign: 'center', lineHeight: fontValue(20), fontSize: fontValue(15) }}>
+            {/* Waiting for another user to join...{receiverPhone} */}
+            Calling {'\n'}{receiverPhone}
           </Text>
         </View>
       )}

@@ -5,9 +5,8 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { COLORS, SCREENS, SocketEvent } from '../../utils/constants';
 import HomeSvg from '../../assets/icons/home.svg';
 import SearchSvg from '../../assets/icons/search.svg';
-import CartSvg from '../../assets/icons/cart.svg';
-import MessageSvg from '../../assets/icons/message.svg';
-import DashboardSvg from '../../assets/icons/dashboard.svg';
+import CallSvg from '../../assets/icons/callsBlalck.svg';
+// import CallSvg from '../../assets/icons/calls.svg';
 import { fontValue } from '../../utils/responsiveFonts';
 import { socket } from '../../utils/socket';
 import { useEffect, useState } from 'react';
@@ -32,7 +31,7 @@ const _renderIcon = (routeName: string, selectedTab: string) => {
             Icon = SearchSvg;
             break;
         case SCREENS.CallStackNavigator:
-            Icon = CartSvg;
+            Icon = CallSvg;
             break;
     }
 
@@ -55,7 +54,7 @@ const _renderIcon = (routeName: string, selectedTab: string) => {
             {routeName === SCREENS.ChatStackNavigator && messages > 0 && (
                 <View
                     style={[styles.badge, {
-                        borderColor: selectedTab === routeName ? COLORS.primary : 'white',
+                        borderColor: selectedTab === routeName ? COLORS.primary : 'red',
                     }]}>
                     <Text
                         style={{

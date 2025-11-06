@@ -3,10 +3,10 @@ export const REFRESH_TOKEN_KEY = 'refreshtoken';
 export const BASE_URL = 'http://13.235.83.139:3001/api/';
 // export const BASE_URL = 'http://localhost:4000/api/';
 export const IMAGE_URL = 'https://d3f1l8wc4pf29x.cloudfront.net/';
-export const SOCKET_PATH = '/api/socket.io';
+export const SOCKET_PATH = '/socket.io';
 // export const SOCKET_SERVER = 'http://192.168.1.3:4000/api';
 // export const SOCKET_SERVER = 'http://localhost:4000/api/';
-export const SOCKET_SERVER = 'http://13.235.83.139:3001/api/';
+export const SOCKET_SERVER = 'http://13.235.83.139:3001';
 // export const PAYMENT_TESTING_KEY = "pk_test_51PWASOArAKnrVFwl5jXNCcCYXvWI2vKSZg24EzvlenTGYA02Z8aGMwLedspZkgTWjdNnGG3KRNJNxwpLqfFC0AwN00zzsz0sOF";
 export const PAYMENT_TESTING_KEY = "pk_test_51OPWpdBUDAbweOxj6WA42K0JAP0mIqe6TupTYASGvN7BY18Wfx3GoKzEBzZPvFyOkJ5OXgvqNp1rmbRApVQRBLqb00spyokXIC";
 
@@ -16,16 +16,18 @@ export const URL = {
   SEND_OTP: 'auth/send-otp',
   VERIFY_OTP: 'auth/verify-otp',
   USERS: 'auth/users',
+  GET_PROFILE: 'auth/get-user',
   CONVERSATIONS: 'chat/conversations',
   SEND_MESSAGE: 'chat/send-message',
   RESEND_OTP: 'auth/otp',
   GROUP_CREATE: 'group/create',
   USER_GROUPS: 'group/user-groups',
+  SEND_GROUP_MESSAGE: 'group/send-message',
+  GROUP_MESSAGES: 'group/messages',
   RESET_PASSWORD: 'auth/reset-password',
   FORGOT_PASSWORD: 'auth/forgot-password',
   LOG_OUT: 'auth/logout',
   REFRESH_TOKEN: 'auth/refreshtoken',
-  GET_PROFILE: 'user/profile',
   PRODUCT_SUB: 'home/product-sub-categories',
   GET_VENDOR_LIST: 'home/vendors',
   GET_PRODUCT_LISTING: 'vendor/product',

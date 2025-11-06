@@ -17,12 +17,14 @@ import Smile from "../../assets/icons/smile.svg";
 import Camera from "../../assets/icons/camera.svg";
 import Paperclip from "../../assets/icons/paperclip.svg";
 import { useTheme } from "../../theme/ThemeProvider";
-import { getMessagesService, sendMessageService } from "../../services/Chat";
+import { getGroupMessagesService, getMessagesService, sendGroupMessageService, sendMessageService } from "../../services/Chat";
 import { socket } from "../../utils/socket"; // ← Import shared socket
+import { navigationRef } from "../rootstack";
+import { SCREENS } from "../../utils/constants";
 
 const ChatScreen = ({ route }) => {
-  const { chatId, chatDetails } = route.params || {};
-  const currentUserId = "6906430f57f3e6a23395d41a";
+  const { chatId, chatDetails, currentUserId } = route.params || {};
+
   const receiverId = chatDetails?._id;
   const isGroup = chatDetails?.isGroup;
   const receiverPhone = chatDetails?.phoneSuffix + chatDetails?.phoneNumber;
@@ -34,20 +36,25 @@ const ChatScreen = ({ route }) => {
   const flatListRef = useRef<any>();
   const insets = useSafeAreaInsets();
 
-  // Initialize socket connection 
   useEffect(() => {
     socket.connect();
+    socket.on("connect", () => {
+      socket.emit("user_connected", currentUserId);
+    })
+    console.log("Socket connected with user:", currentUserId);
 
-    socket.emit("user_connected", currentUserId);
-    console.log("📡 Socket connected with user:", currentUserId);
+    if (isGroup && chatId) {
+      socket.emit("join_group", chatId);
+      console.log("Joined group:", chatId);
+    }
 
-    // Listen for incoming messages
     socket.on("receive_message", (newMsg) => {
-      console.log("📩 New message received:", newMsg);
-
+      console.log("Received message:");
       if (
-        (newMsg.sender?._id === receiverId && newMsg.receiver?._id === currentUserId) ||
-        (newMsg.sender?._id === currentUserId && newMsg.receiver?._id === receiverId)
+        !isGroup && (
+          (newMsg.sender?._id === receiverId && newMsg.receiver?._id === currentUserId) ||
+          (newMsg.sender?._id === currentUserId && newMsg.receiver?._id === receiverId)
+        )
       ) {
         const formattedMsg = {
           id: newMsg._id,
@@ -58,29 +65,52 @@ const ChatScreen = ({ route }) => {
             minute: "2-digit",
           }),
         };
-        setMessages((prev) => [...prev, formattedMsg]);
+        setMessages(prev => [...prev, formattedMsg]);
       }
     });
 
-    // Cleanup when screen unmounts
+    socket.on("new_group_message", (newMsg) => {
+      if (isGroup && newMsg.group === chatId) {
+        const formattedMsg = {
+          id: newMsg._id,
+          text: newMsg.content,
+          senderName: newMsg.sender?.username || "Unknown",
+          senderAvatar: newMsg.sender?.profilePicture,
+          isOwn: newMsg.sender?._id === currentUserId,
+          time: new Date(newMsg.createdAt).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+        setMessages(prev => [...prev, formattedMsg]);
+      }
+    });
+
     return () => {
       socket.off("receive_message");
+      socket.off("new_group_message");
       socket.disconnect();
-      console.log("❌ Socket disconnected");
+      console.log("Socket disconnected");
     };
-  }, []);
+  }, [isGroup, chatId, receiverId, currentUserId, messages]);
 
-  // Fetch messages 
+
   useEffect(() => {
     getMessages();
   }, []);
 
   const getMessages = async () => {
+    let response: any;
+    console.log("690b8a0182009f7a4be88cf8======", chatId);
+
     try {
       setIsLoading(true);
       const query = `/${chatId}/messages`;
-      const response = await getMessagesService(query);
-
+      if (isGroup) {
+        response = await getGroupMessagesService(chatId);
+      } else {
+        response = await getMessagesService(query);
+      }
       if (response?.data?.data) {
         const formatted = response.data.data.map((msg: any) => ({
           id: msg._id,
@@ -100,7 +130,6 @@ const ChatScreen = ({ route }) => {
     }
   };
 
-  // Send message 
   const onSend = async () => {
     if (!message.trim()) return;
 
@@ -110,31 +139,39 @@ const ChatScreen = ({ route }) => {
       isOwn: true,
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     };
-
-    const payloadGroupChat = {
-      senderId: currentUserId,
-      receiverId: isGroup ? null : receiverId,
-      groupId: isGroup ? chatId : null,
-      content: message,
-      messageStatus: "sent",
-    };
-
-
     setMessages((prev) => [...prev, tempMsg]);
     setMessage("");
     try {
+
       const payload = {
         senderId: currentUserId,
         receiverId,
         content: message,
         messageStatus: "sent",
       };
-      const response = await sendMessageService(payload);
-      if (response?.data?.data) {
-        console.log("✅ Message sent:", response.data.data);
+
+      if (isGroup) {
+        const payloadGroupChat = {
+          senderId: currentUserId,
+          receiverId: isGroup ? null : receiverId,
+          groupId: isGroup ? chatId : null,
+          content: message,
+          messageStatus: "sent",
+        };
+        const responseGroup = await sendGroupMessageService(payloadGroupChat);
+        if (responseGroup?.data?.data) {
+          console.log("Group message sent:", responseGroup.data.data);
+          socket.emit("send_group_message", responseGroup.data.data);
+        }
+      } else {
+        const response = await sendMessageService(payload);
+        if (response?.data?.data) {
+          socket.emit("send_message", response.data.data);
+          console.log("Message sent:", response.data.data);
+        }
       }
     } catch (error) {
-      console.log("❌ sendMessage error:", error?.response?.data || error);
+      console.log("sendMessage error:", error?.response?.data || error);
     }
   };
 
@@ -169,9 +206,19 @@ const ChatScreen = ({ route }) => {
   return (
     <View style={[styles.container]}>
       <ChatHeader
-        name={isGroup ? chatDetails.groupName : receiverPhone}
-        time={isGroup ? `${chatDetails.participants.length} members` : "online"}
-      // name={receiverPhone} time="online" 
+        name={isGroup ? chatDetails.name : receiverPhone}
+        time={isGroup ? `${chatDetails?.members?.length} members` : "online"}
+        // name={receiverPhone} time="online" 
+        // onCallPress={() => navigationRef.navigate(SCREENS.app,{screen:SCREENS.CallStackNavigator, params:{receiverPhone: receiverPhone}})}
+        onCallPress={() =>
+          navigationRef.navigate(SCREENS.app, {
+            screen: SCREENS.CallStackNavigator, // which tab
+            params: {
+              screen: SCREENS.Call, // the screen inside CallStack
+              params: { receiverPhone }, // your param
+            },
+          })
+        }
       />
 
       <FlatList

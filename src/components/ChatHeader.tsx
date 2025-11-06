@@ -13,8 +13,10 @@ import Options from '../assets/icons/options.svg';
 import Bar from '../assets/icons/bar.svg';
 import { COLORS, SCREENS } from "../utils/constants";
 import { navigationRef } from "../screens/rootstack";
+import ImageComponent from "./imageComp";
+import { styles } from "../assets/styles";
 
-const ChatHeader = ({ name, imageUrl, time, isGroup = false }: any) => {
+const ChatHeader = ({ name, imageUrl, time, onCallPress, isGroup = false }: any) => {
     const { width } = useWindowDimensions();
     const navigation = useNavigation();
     const insets = useSafeAreaInsets();
@@ -29,9 +31,14 @@ const ChatHeader = ({ name, imageUrl, time, isGroup = false }: any) => {
             borderBottomWidth: 1,
             backgroundColor: "#fff"
         }}>
-            <TouchableOpacity onPress={navigation.goBack} style={{ marginRight: 16 }}>
+            {/* <TouchableOpacity onPress={navigation.goBack} style={{ marginRight: 16 }}>
                 <BackArrow style={{ color: COLORS.black, }} />
+            </TouchableOpacity> */}
+
+            <TouchableOpacity onPress={navigation.goBack} style={styles.backBtn}>
+                <ImageComponent source={require('../assets/icons/Backarrow.png')} style={styles.img} />
             </TouchableOpacity>
+
             <Image
                 source={
                     // typeof imageUrl === "string"
@@ -49,7 +56,7 @@ const ChatHeader = ({ name, imageUrl, time, isGroup = false }: any) => {
             <TouchableOpacity style={{ marginHorizontal: 6 }}>
                 <Video style={{ color: COLORS.black }} />
             </TouchableOpacity>
-            <TouchableOpacity style={{ marginHorizontal: 6 }}>
+            <TouchableOpacity onPress={onCallPress} style={{ marginHorizontal: 6 }}>
                 <Phone style={{ color: COLORS.black }} />
             </TouchableOpacity>
             <TouchableOpacity style={{ marginHorizontal: 4 }}>

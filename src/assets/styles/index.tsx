@@ -52,6 +52,12 @@ export const styles = StyleSheet.create({
     fontSize: fontValue(16),
     color: COLORS.white,
   },
+  backBtn: {
+    marginRight: fontValue(10),
+    width: fontValue(16),
+    height: fontValue(16),
+    backgroundColor: COLORS.white
+  },
   suggestionModalView: {
     // position: 'absolute',
     // marginTop: scale(10),

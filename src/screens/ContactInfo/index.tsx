@@ -51,6 +51,8 @@ const ContactInfo = () => {
                 tooltipVisible={tooltipVisible}
                 onOpenTooltip={onOpenTooltip}
                 onCloseTooltip={onCloseTooltip}
+                onBack={() => navigationRef.goBack()}
+
             // onOptionSelect={onOptionSelect}
             />
             <ProfileHeader

@@ -134,11 +134,13 @@ import { styles } from "./style";
 import { styles as commonStyles } from "../../assets/styles";
 import { useTheme } from "../../theme/ThemeProvider";
 import { getConversationsService, getUserGroupsService } from "../../services/Chat";
+import { getUsersService } from "../../services/Auth";
 
 const Tab = createMaterialTopTabNavigator();
 
 const OneToOneChats = () => {
   const [chats, setChats] = useState([]);
+  const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const { colors } = useTheme();
@@ -158,8 +160,21 @@ const OneToOneChats = () => {
   useFocusEffect(
     React.useCallback(() => {
       fetchChats();
+      getUser()
     }, [])
   );
+
+  const getUser = async () => {
+    try {
+      setLoading(true);
+      const res = await getUsersService();
+      setUser(res?.data?.data || []);
+    } catch (err) {
+      console.log("❌ Fetch chats error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -168,6 +183,7 @@ const OneToOneChats = () => {
       </View>
     );
   }
+console.log(user,'--------user');
 
   return (
     <FlatList
@@ -176,12 +192,13 @@ const OneToOneChats = () => {
       renderItem={({ item }) => (
         <ChatItem
           chat={item}
-          currentUserId={"6906430f57f3e6a23395d41a"}
+          currentUserId={user?._id}
           onPress={() => {
             navigation.navigate("ChatScreen", {
               chatId: item._id,
+              currentUserId:user?._id,
               chatDetails: item.participants?.find(
-                (p) => p._id !== "6906430f57f3e6a23395d41a"
+                (p) => p._id !== user?._id
               ),
             });
           }}
@@ -230,9 +247,15 @@ const GroupChats = () => {
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => (
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("GroupChatScreen", { groupDetails: item })
-          }
+          // onPress={() =>
+          //   navigation.navigate("GroupChatScreen", { groupDetails: item })
+          // }
+          onPress={() => {
+            navigation.navigate("ChatScreen", {
+              chatId: item._id,
+              chatDetails: {...item, isGroup: true}
+            });
+          }}
           style={{
             flexDirection: "row",
             alignItems: "center",

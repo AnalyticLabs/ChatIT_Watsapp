@@ -106,6 +106,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    paddingHorizontal:fontValue(10)
   },
   listContainer: {
     paddingBottom: fontValue(100),

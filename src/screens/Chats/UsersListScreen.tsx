@@ -16,7 +16,6 @@ import { useTheme } from "../../theme/ThemeProvider";
 import IMAGES from "../../utils/IMAGES";
 import { useFocusEffect } from "@react-navigation/native";
 
-const CURRENT_USER_ID = "6906430f57f3e6a23395d41a"; // replace dynamically if needed
 
 const UsersListScreen = ({ navigation }: any) => {
   const [users, setUsers] = useState<any[]>([]);

@@ -39,7 +39,7 @@ export default function ThemedInput({
         placeholder={placeholder}
         keyboardType={keyboardType}
         placeholderTextColor={colors.textSecondary}
-        style={[styles.input, { color: colors.textPrimary }]}
+        style={[styles.input, { color: colors.textSecondary }]}
       />
     </View>
   );

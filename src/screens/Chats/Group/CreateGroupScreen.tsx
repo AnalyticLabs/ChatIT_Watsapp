@@ -18,8 +18,6 @@ import { COLORS } from "../../../utils/constants";
 import Header from "../../../components/Header";
 import IMAGES from "../../../utils/IMAGES";
 
-const currentUserId = "6906430f57f3e6a23395d41a"; // Replace dynamically if available
-
 const CreateGroupScreen = () => {
     const [groupName, setGroupName] = useState("");
     const [description, setDescription] = useState("");
@@ -89,10 +87,11 @@ const CreateGroupScreen = () => {
                     name: image.fileName || "group.jpg",
                     type: image.type || "image/jpeg",
                 });
-            } else if (profilePictureUrl) {
-                // Optional: if you want to send a URL instead of uploading
-                formData.append("profilePicture", profilePictureUrl);
-            }
+            } 
+            // else if (profilePictureUrl) {
+            //     // Optional: if you want to send a URL instead of uploading
+            //     formData.append("profilePicture", profilePictureUrl);
+            // }
             console.log(formData,'-------formData');
             
 
