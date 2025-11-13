@@ -1,6 +1,6 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useAppSelector } from '../redux/hooks';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useAppSelector} from '../redux/hooks';
 import LoginEmail from '../pages/authentication/loginEmail';
 import ForgetPassword from '../pages/authentication/forgetPassword';
 import CreateNewPassword from '../pages/authentication/createNewPassword';
@@ -61,15 +61,15 @@ import NoStatus from '../pages/status/noStatus';
 import StatusAdd from '../pages/status/statusAdd';
 import VerifyCode from '../pages/verifyCode';
 import TermsAndConditions from '../utils/data/termsAndConditions';
-import { screenName } from '../utils/screenName';
-import { colors } from '../utils/colors';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {screenName} from '../utils/screenName';
+import {colors} from '../utils/colors';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CustomTabBar from './CustomTabBar';
 
 const Stack = createNativeStackNavigator();
 
 const MainStack = () => {
-  const diet = useAppSelector(state => state.auth.user?.diet)
+  const diet = useAppSelector(state => state.auth.user?.diet);
   const Tab = createBottomTabNavigator();
 
   // const initialRoute = diet ? screenName.MemberTabs : SCREENS.FillDetails
@@ -79,13 +79,12 @@ const MainStack = () => {
       initialRouteName={screenName.Chats}
       screenOptions={{
         headerShown: false,
-        contentStyle: { backgroundColor: colors.black },
-        animation: 'slide_from_right',
+        // contentStyle: {backgroundColor: colors.black},
+        // animation: 'slide_from_right',
       }}>
       <Tab.Screen name={screenName.Chats} component={Chats} />
-      
     </Tab.Navigator>
-  )
-}
+  );
+};
 
 export default MainStack;
