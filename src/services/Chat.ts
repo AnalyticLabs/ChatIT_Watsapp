@@ -2,13 +2,11 @@
 import { instance } from './config';
 import { URL } from './Endpoints';
 
-export const getConversationsService = () => instance.get(URL.CONVERSATIONS);
+export const getConversationsService = () => instance.get(URL.CONVERSATIONS)
 // export const getMessagesService = (data: any) => {instance.get(URL.CONVERSATIONS + data),console.log(URL.CONVERSATIONS + data,'-=-=-=-=-=-=-')}
 // ✅ service
 export const getMessagesService = async (data: any) => {
     const url = `${URL.CONVERSATIONS}${data}`;
-    console.log(url, '→ getMessagesService URL');
-
     try {
         const response = await instance.get(url);
         return response;
@@ -39,8 +37,6 @@ export const sendGroupMessageService = (payload: any) =>
 
 export const getGroupMessagesService = async (data: any) => {
     const url = `${URL.GROUP_MESSAGES}/${data}`;
-    console.log(url, '→ getGroupMessagesService URL');
-
     try {
         const response = await instance.get(url);
         return response;

@@ -1,0 +1,172 @@
+import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '../../theme/themeContext';
+import { colors } from '../../utils/colors';
+import { allGroupsData } from '../../utils/data/groupsData';
+import { labels } from '../../utils/labels';
+import { screenName } from '../../utils/screenName';
+import { ArchiveIconBlackIcon, FileBlackIcon, FileDarkIcon, ImageDarkIcon, MicrophoneDarkIcon, MikeBlackIcon, PictureBlackIcon, StickerDarkIcon, StickerGreyIcon, VideoBlackIcon, VideoDarkIcon } from '../../utils/svg';
+import { BottomTabBar } from '../commonComponents';
+import { flex1, flexRow, mr5, mt20, mt3, mv10, pb5, ph20, pv15 } from '../commonStyles';
+import { commonText } from '../commonText';
+import {  commonView } from '../commonView';
+
+export type ArchiveGroupsProps = {
+
+}
+
+
+const ArchiveGroups = (props: ArchiveGroupsProps) => {
+    const navigation = useNavigation();
+    const { theme } = useTheme();
+    const isDarkTheme = theme === 'dark';
+    return (
+        <View style={[{ backgroundColor: isDarkTheme ? colors.darkModeVar2 : colors.white }, flex1, mt20, styles.whiteBg]}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={flex1}>
+                    {allGroupsData.map((group) => (
+                        <View key={group.id}>
+                            {group.id === 1 ? <View style={mv10} /> : <View style={[{ backgroundColor: isDarkTheme ? colors.darkModeVar3 : colors.greyVar0 },commonView.commonLineDividerGrey]} />}
+                            <TouchableOpacity onPress={() => {
+                                group.isAdmin === 'true' ? navigation.navigate(screenName.GroupChattingAdmin as never) : navigation.navigate(screenName.GroupChatting as never);
+                            }}
+                                onLongPress={() => {
+                                }} style={[ph20, pv15]}>
+                                <View style={[flexRow]}>
+                                    <View>
+                                        <Image source={group.profileImg} style={styles.profileImg} />
+                                    </View>
+                                    <View style={[flex1]}>
+                                       <View style={[commonView.rowSpaceBetween,pb5]}>
+                                            <Text style={[commonText.h15Blackvar2Bold500]}>{group.name}</Text>
+                                            {
+                                                group.id === 4 ? (
+                                                    <Text style={[commonText.h12fontBold400blackVar2]}>{group.time}</Text>
+                                                ) : (
+                                                    <Text style={[commonText.h12fontBold400GreyVar4]}>{group.time}</Text>
+                                                )
+                                            }
+                                        </View>
+                                        {group.id === 1 ? (
+                                            <View style={[commonView.rowSpaceBetween]}>
+                                                <Text style={[commonText.h14GreenBold400]}>{labels.DebraisTyping}</Text>
+                                                <View style={mt3}>
+                                                    <ArchiveIconBlackIcon />
+                                                </View>
+                                            </View>
+                                        ) : group.id === 2 ? (
+                                            <View style={[commonView.rowSpaceBetween]}>
+                                                
+                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                    <Text style={[mr5,commonText.h14GreyVar4Bold400]}>{labels.James}</Text>
+                                                    <View style={[mr5]}>
+                                                        {isDarkTheme ? <VideoDarkIcon /> : <VideoBlackIcon />}
+                                                    </View>
+                                                    <Text style={[commonText.h14GreyVar4Bold400]}>{labels.Video}</Text>
+                                                </View>
+                                                <ArchiveIconBlackIcon />
+                                            </View>
+                                        ) : group.id === 3 ? (
+                                            <View style={[commonView.rowSpaceBetween]}>
+                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                    <Text style={[mr5,commonText.h14GreyVar4Bold400]}>{labels.Hollis}</Text>
+                                                    <View style={[mr5]}>
+                                                        {isDarkTheme ? <MicrophoneDarkIcon /> : <MikeBlackIcon />}
+                                                    </View>
+                                                    <Text style={[commonText.h14GreyVar4Bold400]}>{labels.Audio}</Text>
+                                                </View>
+                                                <ArchiveIconBlackIcon />
+                                            </View>
+                                        ) : group.id === 4 ? (
+                                            <View style={[commonView.rowSpaceBetween]}>
+                                                <Text style={[commonText.h14GreyVar4Bold400]}>{labels.JonesHttps}</Text>
+                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                    <View style={[styles.roundNumber, mr5, { backgroundColor: colors.primaryVar3 }]}>
+                                                        <Text style={styles.roundNumberText}>3</Text>
+                                                    </View>
+                                                    <ArchiveIconBlackIcon />
+                                                </View>
+                                            </View>
+                                        ) : group.id === 5 ? (
+                                            <View style={[commonView.rowSpaceBetween]}>
+                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                    <Text style={[mr5,commonText.h14GreyVar4Bold400]}>{labels.Horace}</Text>
+                                                    <View style={[mr5]}>
+                                                        {isDarkTheme ? <ImageDarkIcon /> : <PictureBlackIcon />}
+                                                    </View>
+                                                    <Text style={[commonText.h14GreyVar4Bold400]}>{labels.Image}</Text>
+                                                </View>
+                                                <ArchiveIconBlackIcon />
+                                            </View>
+                                        ) : group.id === 6 ? (
+                                            <View style={[commonView.rowSpaceBetween]}>
+                                                <View style={flexRow}>
+                                                    <Text style={[mr5,commonText.h14GreyVar4Bold400]}>{labels.Smith}</Text>
+                                                    <View style={[mr5]} >
+                                                        {isDarkTheme ? <FileDarkIcon /> : <FileBlackIcon />}
+                                                    </View>
+                                                    <Text style={[commonText.h14GreyVar4Bold400]}>{labels.guidelinespdf}</Text>
+                                                </View>
+                                                <ArchiveIconBlackIcon />
+                                            </View>
+                                        ) : group.id === 7 ? (
+                                            <View style={[commonView.rowSpaceBetween]}><View style={[flexRow]}>
+                                                <Text style={[mr5,commonText.h14GreyVar4Bold400]}>{labels.Alex}</Text>
+                                                <View style={[mr5]} >
+                                                    {isDarkTheme ? <StickerDarkIcon /> : <StickerGreyIcon />}
+                                                </View>
+                                                <Text style={[commonText.h14GreyVar4Bold400]}>{labels.Sticker}</Text>
+                                            </View>
+                                                <ArchiveIconBlackIcon />
+                                            </View>
+                                        ) : (
+                                            <View style={[commonView.rowSpaceBetween]}>
+                                                <View style={[flexRow]}>
+                                                    <Text style={[commonText.h14GreyVar4Bold400]}>{labels.JoinedUsing}</Text>
+                                                </View>
+                                                <ArchiveIconBlackIcon />
+                                            </View>
+                                        )
+                                        }
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    ))}
+                </View>
+            </ScrollView>
+            <BottomTabBar />
+        </View >
+    )
+}
+
+const styles = StyleSheet.create({
+    whiteBg: {
+        height: '100%',
+        width: '100%',
+        borderTopLeftRadius: 45,
+        borderTopRightRadius: 45,
+        overflow: 'hidden'
+    },
+    roundNumber: {
+        height: 25,
+        width: 25,
+        borderRadius: 20,
+    },
+    roundNumberText: {
+        textAlign: 'center',
+        color: colors.white,
+        fontSize: 12,
+        fontWeight: '400',
+        marginTop: 3,
+    },
+    profileImg: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 12
+    }
+});
+
+export default ArchiveGroups

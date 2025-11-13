@@ -1,76 +1,65 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import { StatusBar, StyleSheet, Text, TextInput, useColorScheme } from 'react-native';
-import FlashMessage from 'react-native-flash-message';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import React, { useEffect } from 'react';
+import { Image, Platform, StatusBar, View } from 'react-native';
+import * as Keychain from 'react-native-keychain';
+import SplashScreen from 'react-native-splash-screen';
+import RootNavigation from './navigation';
+import { getData, storageKeys } from './src/common/asyncStorage';
+import { h100, w100 } from './src/components/commonStyles';
+import { ThemeProvider } from './src/theme/themeContext';
+import { colors } from './src/utils/colors';
+import { screenName } from './src/utils/screenName';
+import { styledComponentsSheet } from './src/styledComponent/styledComponent';
 import { Provider } from 'react-redux';
-import store from './src/redux/store';
-import RootStack from './src/screens/rootstack';
-import { COLORS } from './src/utils/constants';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { store } from './src/redux/store';
 
+export type AppProps = {};
 
+const App = (props: AppProps) => {
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-  // const insets = useSafeAreaInsets();
+  const STATUS_BAR_HEIGHT = Platform.OS === "ios" ? 50 : StatusBar.currentHeight;
+  const HEADER_HEIGHT = Platform.OS === "ios" ? 44 : 56;
 
-  const backgroundStyle = {
-    backgroundColor: COLORS.white,
+  useEffect(() => {
+    initialCall();
+  }, []);
+
+  const initialCall = async () => {
+    setTimeout(() => {
+      SplashScreen.hide();
+      setIsLoading(false);
+    }, 1000);
+
+    var loginDetails = await getData(storageKeys.loginDetails);
+    if (loginDetails && loginDetails.token) {
+    } else {
+      await Keychain.resetGenericPassword();
+    }
   };
 
-  if (Text.defaultProps == null) {
-    Text.defaultProps = {};
+  if (isLoading) {
+    return (
+      <View style={[styledComponentsSheet.splashScreenContainer]}>
+        <Image source={require('./assets/images/png/splashImage.png')} style={[w100, h100]} />
+      </View>
+    );
   }
-  Text.defaultProps.allowFontScaling = false;
-
-  if (TextInput.defaultProps == null) {
-    TextInput.defaultProps = {};
-  }
-  TextInput.defaultProps.allowFontScaling = false;
-
   return (
-    <>
-      <StatusBar
-        barStyle={'light-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <GestureHandlerRootView>
-        <Provider store={store}>
-          <BottomSheetModalProvider>
-            <FlashMessage floating />
-            <RootStack />
-          </BottomSheetModalProvider>
-        </Provider>
-      </GestureHandlerRootView>
-    </>
+    <Provider store={store}>
+      <ThemeProvider>
+        <View style={{ flex: 1 }}>
+          <View style={{ height: STATUS_BAR_HEIGHT, backgroundColor: colors.primaryVar3 }}>
+            <StatusBar
+              translucent
+              backgroundColor={colors.primaryVar3}
+              barStyle="light-content"
+            />
+          </View>
+          <RootNavigation initialRouteName={screenName.LoginEmail} />
+        </View>
+      </ThemeProvider>
+    </Provider>
   );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;

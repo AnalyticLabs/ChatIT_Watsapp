@@ -1,9 +1,10 @@
+import moment from 'moment';
+import Toast from 'react-native-toast-message';
 import { showMessage } from 'react-native-flash-message';
-import RNFS from 'react-native-fs';
-import { COLORS } from './constants';
-import { styles } from '../assets/styles';
-import { fontValue } from './responsiveFonts';
 
+import { REGEX_CONST } from './regex';
+import { color } from 'react-native-elements/dist/helpers';
+import { colors } from './colors';
 
 export const logToConsole = (...args: any) => {
   if (__DEV__ && console.tron) {
@@ -13,113 +14,58 @@ export const logToConsole = (...args: any) => {
   }
 };
 
-
-const getSignedUrl = async (fileCount: number) => {
-  try {
-    const response = await homeSignedUrlService(`?fileCount=${fileCount}`)
-    return response.data.data;
-  } catch (err) {
-    logToConsole(err, 'error--in signed url', err?.response?.data);
-    return [];
-  }
+export const validateEmail = (email: string) => {
+  return REGEX_CONST.EMAIL_REGEX.test(email);
 };
 
-export const uploadFile = async (
-  media: any,
-  type: string, // 'image' or 'video'
-  primaryIndex?: number
-) => {
-  try {
-    let files = Array.isArray(media) ? media : [media];
-
-    const filePaths = files.filter(file =>
-      typeof file === 'string' &&
-      (file.startsWith('file://') || file.startsWith('/') || file.startsWith('content://'))
-    );
-
-    const signedUrls = await getSignedUrl(filePaths.length);
-
-    const uploadPromises = filePaths.map(async (file, index) => {
-      const obj = signedUrls[index];
-      let localPath = file.replace('file://', '');
-
-      // Handle content:// URIs (Android)
-      if (Platform.OS === 'android' && file.startsWith('content://')) {
-        const destPath = `${RNFS.TemporaryDirectoryPath}/upload-${Date.now()}-${index}`;
-        try {
-          await RNFS.copyFile(file, destPath);
-          localPath = destPath;
-        } catch (copyErr) {
-          console.error('Failed to copy file from content URI:', copyErr);
-          return '';
-        }
-      }
-
-      const fileExt = localPath.split('.').pop()?.toLowerCase() || 'octet-stream';
-      const mimeType = getMimeTypeFromExtension(fileExt);
-
-      try {
-        // Read file in base64
-        const base64Data = await RNFS.readFile(localPath, 'base64');
-
-        const response = await fetch(obj.url, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': mimeType,
-            // DO NOT include Content-Encoding unless your backend expects base64
-            // 'Content-Encoding': 'base64',
-          },
-          body: base64ToUint8Array(base64Data),
-        });
-
-        if (!response.ok) {
-          console.error('Upload failed:', await response.text());
-          return '';
-        }
-
-        if (primaryIndex !== undefined) {
-          return {
-            filename: obj.filename,
-            isPrimary: index === primaryIndex,
-          };
-        }
-
-        return obj.filename;
-
-      } catch (uploadErr) {
-        console.error('Upload error:', uploadErr);
-        return '';
-      }
-    });
-
-    const filenames = await Promise.all(uploadPromises);
-    return { status: true, data: filenames };
-
-  } catch (err: any) {
-    console.error("Upload error:", err.message);
-    return {
-      status: false,
-      message: err?.response?.data || 'Something went wrong while uploading files.',
-    };
-  }
+export const validatePassword = (password: any) => {
+  return REGEX_CONST.PASSWORD_REGEX.test(password);
 };
+
+export const getTimeDifference = (targetTime: string) => {
+  const now = moment();
+  const target = moment(targetTime);
+  const diffMinutes = target.diff(now, 'minutes');
+
+  const isPast = diffMinutes < 0;
+  const absMinutes = Math.abs(diffMinutes);
+  const hours = Math.floor(absMinutes / 60);
+  const minutes = absMinutes % 60;
+
+  let result = '';
+  if (hours > 0) result += `${hours}hr `;
+  if (minutes > 0) result += `${minutes}mins`;
+
+  if (!result) result = 'Just now';
+  else result = isPast ? `${result.trim()} ago` : `In ${result.trim()}`;
+
+  return result;
+};
+
+// export const showSuccessToast = (text: string) => {
+//   Toast.show({ type: 'success', text1: text });
+// };
+
+// export const showErrorToast = (text: string) => {
+//   Toast.show({ type: 'error', text1: text });
+// };
 
 export const showSuccessToast = async (msg: string) => {
   showMessage({
     message: msg,
     type: 'success',
-    backgroundColor: COLORS.primary,
-    color: COLORS.black,
+    backgroundColor: colors.primaryVar0,
+    color: colors.black,
     icon: 'success',
     iconProps: {
-      tintColor: COLORS.black,
+      tintColor: colors.black,
     },
     floating: true,
     style: {
       alignItems: 'center',
-      gap: fontValue(5),
+      gap: 5,
     },
-    titleStyle: { ...styles.poppinsMedium },
+    // titleStyle: { ...styles.poppinsMedium },
   });
 };
 
@@ -128,14 +74,46 @@ export const showErrorToast = async (msg: string) => {
   showMessage({
     message: msg,
     type: 'danger',
-    backgroundColor: COLORS.red,
-    color: COLORS.white,
+    backgroundColor: color.red,
+    color: colors.white,
     icon: 'danger',
     floating: true,
     style: {
       alignItems: 'center',
-      gap: fontValue(5),
+      gap: 5,
     },
-    titleStyle: { ...styles.poppinsMedium },
+    // titleStyle: { ...styles.poppinsMedium },
   });
 };
+
+// utils/messageFormatter.ts
+
+// export const formatMessage = (msg: any, currentUserId: string) => ({
+//   id: msg?._id,
+//   text: msg?.content || "",
+//   senderName: msg?.sender?.username || "",
+//   senderAvatar: msg?.sender?.profilePicture || "",
+//   isOwn: msg?.sender?._id === currentUserId,
+//   time: new Date(msg?.createdAt || Date.now()).toLocaleTimeString([], {
+//     hour: "2-digit",
+//     minute: "2-digit",
+//   }),
+//   type: msg?.contentType || "text",
+//   status: msg?.messageStatus || "sent",
+// });
+
+export const formatMessage = (msg, currentUserId) => ({
+  _id: msg?._id, // 👈 keep the same name as backend
+  text: msg?.content || "",
+  senderName: msg?.sender?.username || "",
+  senderAvatar: msg?.sender?.profilePicture || "",
+  isOwn: msg?.sender?._id === currentUserId,
+  time: new Date(msg?.createdAt || Date.now()).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  }),
+  type: msg?.contentType || "text",
+  status: msg?.messageStatus || "sent",
+});
+
+
