@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-// import { HAS_ONBOARDED, SCREENS } from '../../utils/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ActivityIndicator, View} from 'react-native';
 import LoginEmail from '../pages/authentication/loginEmail';

@@ -20,19 +20,18 @@ import { styledComponentsSheet } from '../../styledComponent/styledComponent';
 import { getGroupMessagesService, getMessagesService } from '../../services/Chat';
 import { socket } from '../../utils/socket';
 import { formatMessage } from '../../utils/functions';
+import { useAppSelector } from '../../redux/hooks';
 
 
 export type chatViewProps = {
 
 }
 
-
 const ChatView = ({ route }: any) => {
-  const { chatId, chatDetails, currentUserId } = route.params || {};
-  const receiverId = chatDetails?._id;
+  const {user} = useAppSelector((state) => state.auth);
+  const { chatId, chatDetails } = route.params || {};
   const otherUserId = chatDetails?.otherUserId;
   const isGroup = chatDetails?.isGroup;
-  const receiverPhone = chatDetails?.phoneSuffix + chatDetails?.phoneNumber;
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedTab, setSelectedTab] = useState('All');
   const [selectedModalId, setSelectedModalId] = useState(null);
@@ -42,6 +41,8 @@ const ChatView = ({ route }: any) => {
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
+const currentUserId = user?._id;
+console.log(chatDetails,'----chatDetails');
 
 
   useEffect(() => {
@@ -195,19 +196,6 @@ const ChatView = ({ route }: any) => {
     }
   };
 
-  const messages1 = [
-    { id: 1, message: receiveMessage1(isDarkTheme), type: "receivemsg", time: "8:16 PM" },
-    { id: 2, message: sentMessage1("Good Morning Mam", isDarkTheme), type: "sentmsg", time: "8:17 PM", icon: Bluetick() },
-    // { id: 3, message: receiveMessage2(isDarkTheme), type: "receivemsg", time: "8:16 PM" },
-    { id: 4, message: SentMessage2(isDarkTheme), type: "sentmsg", time: "8:17 PM", icon: Bluetick() },
-    // { id: 5, message: SentMessage6(isDarkTheme), type: "sentmsg" },
-    { id: 6, message: receiveMessage3(isDarkTheme), type: "receivemsg", time: "8:16 PM" },
-    // { id: 7, message: sentMessage3(isDarkTheme), type: "sentmsg", time: "8:17 PM", icon: Bluetick(), msg: Reactmsg() },
-    { id: 8, message: receiveMessage4(isDarkTheme), type: "receivemsg", time: "8:16 PM" },
-    { id: 9, message: sentMessage4(isDarkTheme), type: "sentmsg", time: "8:17 PM", icon: Tick(), text: 'Edited', iconName: 'circle', iconType: 'font-awesome' },
-    { id: 10, message: sentMessage5(isDarkTheme), type: "sentmsg" }
-  ];
-
   const translateXValues = useRef([]);
 
   useEffect(() => {
@@ -308,68 +296,64 @@ const ChatView = ({ route }: any) => {
                           }
                         }}
                       >
-
-                        {item?.id === 10 || item?.id === 5 ? null : (
+                        <View >
+                          <Text style={[commonText.h12font400Grey]}>{item?.time}</Text>
                           <View style={flexRow}>
-                            <Text style={[commonText.h12font400Grey]}>{item?.time}</Text>
-
-                            <View style={flexRow}>
-                              <View
-                                style={{
-                                  justifyContent: 'center',
-                                  marginRight: 8,
-                                  marginLeft: 8,
-                                  bottom: 1,
-                                }}
-                              >
-                                <CustomIcon
-                                  name="circle"
-                                  type="font-awesome"
-                                  size={6}
-                                  color={isDark() ? colors.greyVar4 : colors.greyVar3}
-                                />
-                              </View>
-
-                              {!item?.isOwn ? (
-                                <View>
-                                  <View
-                                    style={[
-                                      styles.receiveMsgCard,
-                                      {
-                                        backgroundColor: isDarkTheme
-                                          ? colors.darkModeVar4
-                                          : colors.white,
-                                      },
-                                    ]}
-                                  >
-                                    <Text style={[commonText.h14font400grey3black2]}>
-                                      {item?.text}
-                                    </Text>
-                                  </View>
-                                </View>
-                              ) : (
-                                <View>
-                                  <View
-                                    style={[
-                                      styles.sndMsgCard,
-                                      {
-                                        backgroundColor: isDarkTheme
-                                          ? colors.darkModeVar4
-                                          : colors.primaryVar4,
-                                      },
-                                    ]}
-                                  >
-                                    <Text style={[commonText.h14font400grey3black2]}>
-                                      {item?.text}
-                                    </Text>
-                                  </View>
-                                </View>
-                              )}
-
-                              <View style={pl6}>{item?.icon}</View>
+                            <View
+                              style={{
+                                justifyContent: 'center',
+                                marginRight: 8,
+                                marginLeft: 8,
+                                bottom: 1,
+                              }}
+                            >
+                              <CustomIcon
+                                name="circle"
+                                type="font-awesome"
+                                size={6}
+                                color={isDark() ? colors.greyVar4 : colors.greyVar3}
+                              />
                             </View>
+
+                            {!item?.isOwn ? (
+                              <View>
+                                <View
+                                  style={[
+                                    styles.receiveMsgCard,
+                                    {
+                                      backgroundColor: isDarkTheme
+                                        ? colors.darkModeVar4
+                                        : colors.white,
+                                    },
+                                  ]}
+                                >
+                                  <Text style={[commonText.h14font400grey3black2]}>
+                                    {item?.text}
+                                  </Text>
+                                </View>
+                              </View>
+                            ) : (
+                              <View>
+                                <View
+                                  style={[
+                                    styles.sndMsgCard,
+                                    {
+                                      backgroundColor: isDarkTheme
+                                        ? colors.darkModeVar4
+                                        : colors.primaryVar4,
+                                    },
+                                  ]}
+                                >
+                                  <Text style={[commonText.h14font400grey3black2]}>
+                                    {item?.text}
+                                  </Text>
+                                </View>
+                              </View>
+                            )}
+
+                            <View style={pl6}>{item?.icon}</View>
                           </View>
-                        )}
+                        </View>
 
                         {item?.message}
 
@@ -383,7 +367,6 @@ const ChatView = ({ route }: any) => {
                   </PanGestureHandler>
                 );
               })}
-
             </ScrollView>
             {isSwiped ? (
               <ReplyFooterView onIconClick={handleReplyFooterIconClick} />
@@ -391,7 +374,7 @@ const ChatView = ({ route }: any) => {
               <FooterChatView setMessages={setMessages} messages={messages} currentUserId={currentUserId}
                 receiverId={otherUserId}
                 isGroup={isGroup}
-                otherUserId={chatDetails?.otherUserId}
+                otherUserId={otherUserId}
                 chatId={chatId} />
             )}
           </ImageBackground>

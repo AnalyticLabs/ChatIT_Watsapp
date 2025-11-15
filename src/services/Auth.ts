@@ -19,7 +19,9 @@ export const logOutService = async () => {
 };
 export const sendOTPService = (data: any) => publicReq.post(URL.SEND_OTP, data);
 export const verifyOTPService = (data: any) => publicReq.post(URL.VERIFY_OTP, data);
-export const getUsersService = () => instance.get(URL.GET_PROFILE);
+// export const getUsersService = () => instance.get(URL.GET_PROFILE);
+export const getProfileService = () => instance.get(URL.GET_PROFILE);
+export const getUsersService = () => instance.get(URL.USERS);
 
 
 export const signUpService = (data: any) => publicReq.post(URL.SIGN_UP, data);
@@ -31,7 +33,6 @@ export const resendOtpService = (data: any) =>
     publicReq.patch(URL.RESEND_OTP, data);
 export const resetPasswordService = (data: any) =>
     publicReq.put(URL.RESET_PASSWORD, data);
-export const getProfileService = () => instance.get(URL.GET_PROFILE);
 
 export const getPaymentCardService = () => instance.get(URL.PAYMENT_CARD);
 export const deletePaymentCardService = (query: any) => instance.delete(URL.PAYMENT_CARD + query);

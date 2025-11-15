@@ -166,6 +166,8 @@ const AllChats = ({ selectedCards, onCardSelection, chats, currentUserId }: AllC
                                     // } else {
                                     //     onCardSelection(chat?._id);
                                     // }
+                                    console.log(chat,'----chat');
+                                    
                                     navigation.navigate(screenName.ChatView, {
                                         chatId: chat.id,
                                         currentUserId: currentUserId,
@@ -262,7 +264,7 @@ const AllChats = ({ selectedCards, onCardSelection, chats, currentUserId }: AllC
                     ))}
                 </View>
             </ScrollView >
-            {/* <BottomTabBar /> */}
+            <BottomTabBar />
         </View >
     )
 }

@@ -17,7 +17,7 @@ import { ArchiveIconWhiteIcon, DarkThemeMessageIcon, DeleteWhiteIcon, LeftArrowW
 import { SmallButton } from './commonButtons';
 import { IconModal } from './commonModal';
 import { alignItemsCenter, alignSelfCenter, borderRadius10, flex1, flexRow, justyfyCenter, mh10, mh20, ml10, ml15, mt15, mt20, mv10, mv15, mv20, p5, pl10, pl13, pt10, spaceAround, spaceBetween, textCenter } from './commonStyles';
-import {   commonText } from './commonText';
+import { commonText } from './commonText';
 import { commonView, } from './commonView';
 
 // ====================   Chat based Header Component   ====================
@@ -52,9 +52,9 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({ title, isCall, icon1Navi
         return (
             <View style={[mh20]} >
                 <Text style={[commonText.h16font600Black]}>Clear Call Log?</Text>
-                <Text style={[mt20,commonText.h14GreyVar4Bold400]}>Do you want to clear your entire call log.</Text>
-                <View style={[commonView.rowSpaceBetween,mv20]}>
-                    
+                <Text style={[mt20, commonText.h14GreyVar4Bold400]}>Do you want to clear your entire call log.</Text>
+                <View style={[commonView.rowSpaceBetween, mv20]}>
+
                     <SmallButton
                         title={labels.cancel}
                         onChange={handleCancelButton}
@@ -353,12 +353,12 @@ export const CustomActionBar: React.FC<CustomActionBarProps> = ({
         return (
             <View style={[mh20]} >
                 <Text style={[commonText.h16font600Black]}>Delete This Chat?</Text>
-                <Text style={[mt20,commonText.h14GreyVar4Bold400]}>Messages will only be removed from this{'\n'}device and your devices</Text>
+                <Text style={[mt20, commonText.h14GreyVar4Bold400]}>Messages will only be removed from this{'\n'}device and your devices</Text>
                 <View style={[flexRow, mt20, alignItemsCenter]}>
                     <MultiSelectOption selectedColor={colors.primaryVar3} unselectedColor={colors.greyVar6} isSelected={optionSelect} onSelect={handleOptionSelect} />
-                    <Text style={[ml15,commonText.h14GreyVar4Bold400]}>Also delete media received in this call{'\n'}from the device gallery.</Text>
+                    <Text style={[ml15, commonText.h14GreyVar4Bold400]}>Also delete media received in this call{'\n'}from the device gallery.</Text>
                 </View>
-                <View style={[commonView.rowSpaceBetween,mv20]}>
+                <View style={[commonView.rowSpaceBetween, mv20]}>
                     <SmallButton
                         title={labels.cancel}
                         onChange={handleCancelButton}
@@ -400,7 +400,7 @@ export const CustomActionBar: React.FC<CustomActionBarProps> = ({
         return (
             <View style={[mh20]} >
                 <Text style={[commonText.h16font600Black]}>Mute Notifications</Text>
-                <Text style={[mt20,commonText.h14GreyVar4Bold400]}>Other participants will not see you{'\n'}muted this chat. You will still be notified if{'\n'}you are mentioned.</Text>
+                <Text style={[mt20, commonText.h14GreyVar4Bold400]}>Other participants will not see you{'\n'}muted this chat. You will still be notified if{'\n'}you are mentioned.</Text>
                 <View style={[mt15]}>
                     {
                         muteNotificationdata.map((item) => {
@@ -413,13 +413,13 @@ export const CustomActionBar: React.FC<CustomActionBarProps> = ({
                                             onPress={() => handleStatusSelect(item.name)}
                                         />
                                     </View>
-                                    <Text style={[ml10,commonText.h14BlackVar2Bold400Text]}>{item.name}</Text>
+                                    <Text style={[ml10, commonText.h14BlackVar2Bold400Text]}>{item.name}</Text>
                                 </View>
                             )
                         })
                     }
                 </View>
-                <View style={[commonView.rowSpaceBetween,mv20]}>
+                <View style={[commonView.rowSpaceBetween, mv20]}>
                     <SmallButton
                         title={labels.cancel}
                         onChange={handleCancelButton}
@@ -542,8 +542,8 @@ export const CustomActionBar1: React.FC<CustomActionBar1Props> = ({
         return (
             <View style={[mh20]} >
                 <Text style={[commonText.h16font600Black]}>Delete Contact?</Text>
-                <Text style={[mt20,commonText.h14GreyVar4Bold400]}>This Contact will be removed from your {'\n'}contact List.</Text>
-                <View style={[commonView.rowSpaceBetween,mv20]}>
+                <Text style={[mt20, commonText.h14GreyVar4Bold400]}>This Contact will be removed from your {'\n'}contact List.</Text>
+                <View style={[commonView.rowSpaceBetween, mv20]}>
                     <SmallButton
                         title={labels.cancel}
                         onChange={handleCancelButton}
@@ -637,12 +637,12 @@ export const CustomActionBarSecond: React.FC<CustomActionBarSecondProps> = ({
 
             <View style={[mh20]} >
                 <Text style={[commonText.h16font600Black]}>Delete This Chat?</Text>
-                <Text style={[mt20,commonText.h14GreyVar4Bold400]}>Messages will only be removed from this{'\n'}device and your devices</Text>
+                <Text style={[mt20, commonText.h14GreyVar4Bold400]}>Messages will only be removed from this{'\n'}device and your devices</Text>
                 <View style={[flexRow, mt20, alignItemsCenter]}>
                     <MultiSelectOption selectedColor={colors.primaryVar3} unselectedColor={colors.greyVar6} isSelected={optionSelect} onSelect={handleOptionSelect} />
-                    <Text style={[ml15,commonText.h14GreyVar4Bold400]}>Also delete media received in this call{'\n'}from the device gallery.</Text>
+                    <Text style={[ml15, commonText.h14GreyVar4Bold400]}>Also delete media received in this call{'\n'}from the device gallery.</Text>
                 </View>
-                <View style={[commonView.rowSpaceBetween,mv20]}>
+                <View style={[commonView.rowSpaceBetween, mv20]}>
                     <SmallButton
                         title={labels.cancel}
                         onChange={handleCancelButton}
@@ -730,27 +730,32 @@ export const CustomcallActionBar: React.FC<CustomCallActionBarProps> = ({
 
 // ====================   Bottom Nav Bar   ====================
 
-export const BottomTabBar = () => {
-    const [selectedTab, setSelectedTab] = useState('Chats');
-    const navigation = useNavigation();
-    const route = useRoute();
-    const { theme } = useTheme();
-    const isDarkTheme = theme === 'dark';
+export const BottomTabBar = ({ route }: any) => {
+    // const [selectedTab, setSelectedTab] = useState('Chats');
+    // const navigation = useNavigation();
+    // // const route = useRoute();
+    // const { theme } = useTheme();
+    // const isDarkTheme = theme === 'dark';
 
-    useEffect(() => {
-        if (route.name) {
-            setSelectedTab(route.name);
-        }
-    }, [route.name]);
+    // useEffect(() => {
+    //     if (route.name) {
+    //         setSelectedTab(route.name);
+    //     }
+    // }, [route.name]);
 
-    const handleTabPress = (tabId: number, screenNameNavigate: string) => {
-        setSelectedTab(screenNameNavigate);
-        navigation.navigate(screenNameNavigate as never)
-    };
+    // const handleTabPress = (tabId: number, screenNameNavigate: string) => {
+    //     setSelectedTab(screenNameNavigate);
+    //     navigation.navigate(screenNameNavigate as never)
+    // };
 
     return (
-        <View style={[alignSelfCenter, borderRadius10, { height: DevHeight * 0.07, width: DevWidth * 0.9, backgroundColor: isDarkTheme ? colors.darkModeVar1 : colors.primaryVar3, position: 'absolute', bottom: 10 }]}>
-                <View style={[alignItemsCenter, mv10, mh20,commonView.rowSpaceBetween]}>
+        <View
+        //  style={[alignSelfCenter, borderRadius10, {
+        //     height: DevHeight * 0.07, width: DevWidth * 0.9,
+        //     backgroundColor: isDarkTheme ? colors.darkModeVar1 : colors.primaryVar3, position: 'absolute', bottom: 10
+        // }]}
+        >
+            {/* <View style={[alignItemsCenter, mv10, mh20,commonView.rowSpaceBetween]}>
                 {
                     bottomNavData.map((item) => {
                         const isSelected = item.screenName === selectedTab;
@@ -773,7 +778,7 @@ export const BottomTabBar = () => {
                         )
                     })
                 }
-            </View>
+            </View> */}
         </View>
     );
 };
@@ -782,7 +787,12 @@ export const BottomTabBar = () => {
 
 export const CallBottomTab = () => {
     return (
-        <View style={[{ height: DevHeight * 0.12, width: DevWidth, backgroundColor: isDark() ? colors.darkModeVar1 : colors.white, borderTopLeftRadius: 45, borderTopRightRadius: 45 }]}>
+        <View style={[{
+            height: DevHeight * 0.12,
+            width: DevWidth,
+            backgroundColor: isDark() ? colors.darkModeVar1 : colors.white, borderTopLeftRadius: 45,
+            borderTopRightRadius: 45
+        }]}>
             <View style={[alignSelfCenter, mt15, { height: 5, width: DevWidth * 0.2, backgroundColor: colors.greyVar0 }]} />
             <View style={[flexRow, spaceAround, mt20, mh10]}>
                 {
@@ -949,8 +959,8 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelect, cameraO
     return (
         <View style={[mh20]} >
             <Text style={[commonText.h16font600Black]}>Choose Image</Text>
-            <Text style={[mt20,commonText.h14GreyVar4Bold400]}>Choose image picking options.</Text>
-            <View style={[commonView.rowSpaceBetween,mv20]}>
+            <Text style={[mt20, commonText.h14GreyVar4Bold400]}>Choose image picking options.</Text>
+            <View style={[commonView.rowSpaceBetween, mv20]}>
                 <SmallButton
                     title={labels.Camera}
                     onChange={handleCancelButton}
@@ -1024,8 +1034,8 @@ export const StatusModal: React.FC<StatusModalProps> = ({ onImageSelect }) => {
     return (
         <View style={[mh20]} >
             <Text style={[commonText.h16font600Black]}>Choose Image</Text>
-            <Text style={[mt20,commonText.h14GreyVar4Bold400]}>Choose image picking options.</Text>
-            <View style={[commonView.rowSpaceBetween,mv20]}>
+            <Text style={[mt20, commonText.h14GreyVar4Bold400]}>Choose image picking options.</Text>
+            <View style={[commonView.rowSpaceBetween, mv20]}>
                 <SmallButton
                     title={labels.Camera}
                     onChange={handleCancelButton}
@@ -1057,7 +1067,7 @@ interface RadioBtnProps {
 export const RadioBtn: React.FC<RadioBtnProps> = ({ selected, onPress }) => {
     return (
         <TouchableOpacity style={[commonView.radioButton]} onPress={onPress}>
-            <View style={[commonView.radioButtonRound,{
+            <View style={[commonView.radioButtonRound, {
                 backgroundColor: selected ? colors.primaryVar3 : isDark() ? colors.darkModeVar6 : colors.white,
                 borderColor: isDark() ? colors.darkModeVar5 : colors.greyVar2
             }]}>
@@ -1082,7 +1092,7 @@ export const CardHeaderText: React.FC<CardHeaderTextProps> = ({ text }) => {
                 borderRadius: 4,
                 padding: 5
             }}>
-                <Text style={[{ marginHorizontal: 7 },commonText.h12purpleVar3Text]}>
+                <Text style={[{ marginHorizontal: 7 }, commonText.h12purpleVar3Text]}>
                     {text}
                 </Text>
             </View>

@@ -1,6 +1,6 @@
-import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useAppSelector} from '../redux/hooks';
+import React, { useEffect, useState } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import LoginEmail from '../pages/authentication/loginEmail';
 import ForgetPassword from '../pages/authentication/forgetPassword';
 import CreateNewPassword from '../pages/authentication/createNewPassword';
@@ -61,20 +61,84 @@ import NoStatus from '../pages/status/noStatus';
 import StatusAdd from '../pages/status/statusAdd';
 import VerifyCode from '../pages/verifyCode';
 import TermsAndConditions from '../utils/data/termsAndConditions';
-import {screenName} from '../utils/screenName';
-import {colors} from '../utils/colors';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { screenName } from '../utils/screenName';
+import { colors } from '../utils/colors';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CustomTabBar from './CustomTabBar';
+import AllCalls from '../components/calls/allCalls';
+import { labels } from '../utils/labels';
+import AppImage from '../components/AppImage';
+import { styles } from '../../assets/styles';
+import CustomIcon from '../utils/Icons';
+import { fontValue } from '../utils/responsiveFont';
+import { PermissionsAndroid, Platform } from 'react-native';
+import Contacts from 'react-native-contacts';
+import { setAllContacts } from '../redux/slices/home';
+import { formatContact } from '../utils/functions';
+import { getProfileService } from '../services/Auth';
+import { setUser } from '../redux/slices/authSlice';
+
 
 const Stack = createNativeStackNavigator();
 
 const MainStack = () => {
-  const diet = useAppSelector(state => state.auth.user?.diet);
-  const Tab = createBottomTabNavigator();
+  const dispatch = useAppDispatch();
+  const BottomTabs = createBottomTabNavigator();
 
-  // const initialRoute = diet ? screenName.MemberTabs : SCREENS.FillDetails
+  const [contacts, setContacts] = useState([]);
+  const [formattedContacts, setFormattedContacts] = useState([]);
+
+  useEffect(() => {
+    getContactsPermission();
+    getUser();
+  }, []);
+
+  const getUser = async () => {
+          try {
+              const res = await getProfileService();
+              dispatch(setUser(res?.data?.data || []));
+              console.log(res?.data?.data, 'user-=-=-=-=-=-=-=-=-=-');
+  
+          } catch (err) {
+              console.log("❌ Fetch chats error:", err);
+          } 
+      };
+
+  const getContactsPermission = async () => {
+    if (Platform.OS === 'android') {
+      const permission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS
+      );
+
+      if (permission === PermissionsAndroid.RESULTS.GRANTED) {
+        loadContacts();
+      } else {
+        console.log("Contacts permission denied");
+      }
+    } else {
+      loadContacts();
+    }
+  };
+
+  const loadContacts = () => {
+    Contacts.getAll()
+      .then(cont => {
+        setContacts(cont);
+      })
+      .catch(err => console.warn(err));
+  };
+
+  // *********** STORE HERE ************
+  useEffect(() => {
+    if (Array.isArray(contacts) && contacts.length > 0) {
+      const formatted = contacts.map(formatContact);
+      setFormattedContacts(formatted);   // local state
+      dispatch(setAllContacts(formatted)); // redux store
+    }
+  }, [contacts]);
+
   return (
-    <Tab.Navigator
+    <BottomTabs.Navigator
       tabBar={props => <CustomTabBar {...props} />}
       initialRouteName={screenName.Chats}
       screenOptions={{
@@ -82,8 +146,86 @@ const MainStack = () => {
         // contentStyle: {backgroundColor: colors.black},
         // animation: 'slide_from_right',
       }}>
-      <Tab.Screen name={screenName.Chats} component={Chats} />
-    </Tab.Navigator>
+      <BottomTabs.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <CustomIcon
+              name={'chatbox-ellipses-outline'}
+              type={'Ionicons'}
+              size={fontValue(22)}
+              color={colors.primaryVar2}
+            />
+          ),
+          tabBarLabel: labels.chat,
+          tabBarHideOnKeyboard: true,
+        }}
+        name={screenName.Chats} component={Chats} />
+      <BottomTabs.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <CustomIcon
+              name={'users'}
+              type={'Feather'}
+              size={fontValue(21)}
+              color={colors.primaryVar2}
+            />
+          ),
+          tabBarLabel: labels.Group,
+          tabBarHideOnKeyboard: true,
+        }}
+        name={screenName.Group}
+
+        component={Groups} />
+      <BottomTabs.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <CustomIcon
+              name={'record-circle-outline'}
+              type={'MaterialCommunityIcons'}
+              size={fontValue(23)}
+              color={colors.primaryVar2}
+            />
+          ),
+          tabBarLabel: labels.Status,
+          tabBarHideOnKeyboard: true,
+        }}
+        name={screenName.NoStatus} component={NoStatus} />
+      <BottomTabs.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <CustomIcon
+              name={'person-circle-outline'}
+              type={'Ionicons'}
+              size={fontValue(22)}
+              color={colors.primaryVar2}
+            />
+          ),
+          tabBarLabel: labels.Contact,
+          tabBarHideOnKeyboard: true,
+        }}
+        name={screenName.ContactPage} component={ContactPage} />
+      <BottomTabs.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <CustomIcon
+              name={'phone'}
+              type={'Feather'}
+              size={fontValue(20)}
+              color={colors.primaryVar2}
+            />
+          ),
+          tabBarLabel: labels.Call,
+          tabBarHideOnKeyboard: true,
+        }}
+        name={screenName.Calls} component={Calls} />
+
+
+    </BottomTabs.Navigator>
   );
 };
 

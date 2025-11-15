@@ -377,6 +377,7 @@ export const FooterChatView = ({ setMessages, messages, currentUserId, receiverI
                 content: message,
                 messageStatus: "sent",
             };
+console.log(payload,'payload');
 
             if (isGroup) {
                 const payloadGroupChat = {

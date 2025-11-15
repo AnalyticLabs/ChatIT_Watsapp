@@ -1,27 +1,29 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
-import {colors} from '../utils/colors';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { colors } from '../utils/colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { fontValue } from '../utils/responsiveFont';
 
 const CustomTabBar = ({state, descriptors, navigation}: BottomTabBarProps) => {
+    const insets = useSafeAreaInsets();
   return (
-    // <>
-    //     <BottomTabBar />
-    // </>
-    <View style={[styles.tabContainer]}>
+    <View style={[styles.tabContainer,
+    {bottom: insets.bottom}
+    ]}>
       {state.routes.map((route, index) => {
-        const {options} = descriptors[route.key];
-        const label = options.tabBarLabel ?? route.name;
+        const {options} = descriptors[route?.key];
+        const label = options.tabBarLabel ?? route?.name;
         const isFocused = state.index === index;
 
         const onPress = () => {
           const event = navigation.emit({
             type: 'tabPress',
-            target: route.key,
+            target: route?.key,
             canPreventDefault: true,
           });
           if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
+            navigation.navigate(route?.name);
           }
         };
         const iconName = options.tabBarIcon
@@ -36,16 +38,13 @@ const CustomTabBar = ({state, descriptors, navigation}: BottomTabBarProps) => {
             accessibilityState={isFocused ? {selected: true} : {}}
             onPress={onPress}
             style={[styles.tabButton, isFocused && styles.activeTab]}>
-            <View style={{height: 22, width: 22}}>
-              {/* <AppImage source={require('../../assets/images/Home.png')} style={commonStyles.img} /> */}
+            <View style={{height: fontValue(22), width: fontValue(22)}}>
               {options.tabBarIcon?.({
                 focused: isFocused,
                 color: 'white',
-                size: 22,
+                size: fontValue(22),
               })}
             </View>
-            {/* <Icon name={iconName} size={24} color="#fff" /> */}
-            {/* {isFocused && <View style={styles.indicator} />} */}
           </TouchableOpacity>
         );
       })}
@@ -60,32 +59,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: 'transparent',
-    borderRadius: 30,
-    marginHorizontal: 16,
-    marginBottom: 16,
-    paddingVertical: 10,
+    // backgroundColor: 'transparent',
+    backgroundColor: colors.white,
+    borderRadius: fontValue(30),
+    marginHorizontal: fontValue(16),
+    // marginBottom: 16,
+    paddingVertical: fontValue(10),
     overflow: 'hidden',
     position: 'absolute',
-    bottom: 10,
+    // bottom: 10,
   },
   tabButton: {
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    borderRadius: 16,
-    padding: 15,
+    borderRadius: fontValue(16),
+    padding: fontValue(10),
   },
   activeTab: {
-    backgroundColor: '#000',
-  },
-  indicator: {
-    width: 11,
-    height: 4,
-    borderTopLeftRadius: 2,
-    borderTopRightRadius: 2,
-    backgroundColor: colors.primaryVar0,
-    position: 'absolute',
-    bottom: 0,
+    // backgroundColor: '#000',
+    backgroundColor: colors.primaryVar4,
   },
 });

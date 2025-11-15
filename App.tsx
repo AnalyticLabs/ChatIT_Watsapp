@@ -11,6 +11,7 @@ import { screenName } from './src/utils/screenName';
 import { styledComponentsSheet } from './src/styledComponent/styledComponent';
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
+import FlashMessage from 'react-native-flash-message';
 
 export type AppProps = {};
 
@@ -46,6 +47,7 @@ const App = (props: AppProps) => {
   }
   return (
     <Provider store={store}>
+      <FlashMessage floating />
       <ThemeProvider>
         <View style={{ flex: 1 }}>
           <View style={{ height: STATUS_BAR_HEIGHT, backgroundColor: colors.primaryVar3 }}>

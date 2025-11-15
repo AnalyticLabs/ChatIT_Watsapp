@@ -1,6 +1,7 @@
 import moment from 'moment';
 import Toast from 'react-native-toast-message';
-import { showMessage } from 'react-native-flash-message';
+import { showMessage, hideMessage } from "react-native-flash-message";
+
 
 import { REGEX_CONST } from './regex';
 import { color } from 'react-native-elements/dist/helpers';
@@ -74,7 +75,7 @@ export const showErrorToast = async (msg: string) => {
   showMessage({
     message: msg,
     type: 'danger',
-    backgroundColor: color.red,
+    backgroundColor: colors.red,
     color: colors.white,
     icon: 'danger',
     floating: true,
@@ -116,4 +117,65 @@ export const formatMessage = (msg, currentUserId) => ({
   status: msg?.messageStatus || "sent",
 });
 
+
+
+export const formatContact = (contact) => {
+  if (!contact) return null;
+
+  // 1️⃣ Get first phone number
+  const phone =
+    contact?.phoneNumbers?.length > 0
+      ? contact.phoneNumbers[0].number
+      : null;
+
+  // 2️⃣ Get display name (fallback to "Contact")
+  const contName = contact?.displayName?.trim()
+    ? contact.displayName
+    : "Contact";
+
+  // 3️⃣ Get thumbnail / profile image
+  const profImg = contact?.thumbnailPath || null;
+
+  // 4️⃣ Location is not usually included in contacts → return null
+  const location =
+    contact?.postalAddresses?.length > 0
+      ? contact.postalAddresses[0] // may contain street/city/state
+      : null;
+
+  return {
+    contName,
+    phone,
+    profImg,
+    location,
+  };
+};
+
+const normalizePhone = (num) => {
+  if (!num) return ""; // return empty string if null/undefined
+
+  return num
+    .toString()
+    .replace(/[^0-9]/g, "")
+    .replace(/^91/, "");
+};
+
+export const mergeRegisteredWithContacts = (registeredUsers, deviceContacts) => {
+  return registeredUsers.map(user => {
+    const userPhone = normalizePhone(user.phoneNumber);
+
+    // find contact in device by phone match
+    const matchedContact = deviceContacts.find(contact => {
+      const contactPhone = normalizePhone(contact.phone);
+      return contactPhone === userPhone;
+    });
+
+    return {
+      ...user,
+      contName: matchedContact?.contName || null,
+      contProfImg: matchedContact?.profImg || null,
+      contLocation: matchedContact?.location || null,
+      isInContacts: !!matchedContact
+    };
+  }).filter(item => item.isInContacts);
+};
 

@@ -11,6 +11,11 @@ export const colors = {
     primaryVar1: '#006FCC', // darker shade
     primaryVar0: '#004C99', // darkest accent
 
+    inputBg: 'rgba(51, 51, 51, 1)',
+    cardBg: 'rgba(28, 28, 28, 1)',
+    titleOpacty: 'rgba(255, 255, 255, 0.6)',
+    icon: '#777777',
+
 
     //black
     black: '#000000',

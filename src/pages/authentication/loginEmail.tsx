@@ -287,7 +287,7 @@ const LoginEmail = () => {
         try {
             const response = await sendOTP(payload).unwrap();
             const { status, data, message } = response || {};
-            console.log(status, '----status',response);
+            console.log(status, '----status', response);
 
             if (status !== 'success') {
                 console.log('error ');
@@ -296,17 +296,17 @@ const LoginEmail = () => {
                 return;
             }
             else {
-                dispatch(setCredentials({ user: data?._doc, token: data.accessToken, isAuthenticated: true }));
+                // dispatch(setCredentials({ user: data?._doc, token: data.accessToken, isAuthenticated: true }));
                 navigation.navigate(screenName.Verification, { confirmation: data?.otpDetails, payload });
-                showSuccessToast('Login successful!');
+                // showSuccessToast('Login successful!');
             }
 
         } catch (error: any) {
-            logToConsole(error?.data?.message, 'Login failed-:', error);
             const message =
-                error?.data?.message ||
-                error?.error ||
-                'Something went wrong. Please try again.';
+            error?.data?.message ||
+            error?.error ||
+            'Something went wrong. Please try again.';
+            logToConsole(message,'=-=-=-=-=-=-');
             showErrorToast(message);
         }
     };

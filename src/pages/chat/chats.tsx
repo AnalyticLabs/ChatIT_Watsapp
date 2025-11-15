@@ -11,7 +11,7 @@ import { colors } from '../../utils/colors';
 import { labels } from '../../utils/labels';
 import { screenName } from '../../utils/screenName';
 import { useGetConversationsMutation } from '../../api/chatApi';
-import { getUsersService } from '../../services/Auth';
+import { getProfileService, getUsersService } from '../../services/Auth';
 import { getConversationsService } from '../../services/Chat';
 import { showErrorToast } from '../../utils/functions';
 
@@ -31,13 +31,12 @@ const Chats = (props: chatProps) => {
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
 
-
     const [allChatsData, setAllChatsData] = useState<any[]>([]);
 
     const getUser = async () => {
         try {
             setLoading(true);
-            const res = await getUsersService();
+            const res = await getProfileService();
             setUser(res?.data?.data || []);
             fetchChats(res?.data?.data);
             console.log(res?.data?.data, 'user-=-=-=-=-=-=-=-=-=-');
@@ -48,6 +47,7 @@ const Chats = (props: chatProps) => {
             setLoading(false);
         }
     };
+console.log(user,'---user');
 
     const fetchChats = async (user: any) => {
         try {

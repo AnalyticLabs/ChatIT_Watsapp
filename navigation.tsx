@@ -4,8 +4,8 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useEffect, useState} from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
 import CreateNewPassword from './src/pages/authentication/createNewPassword';
 import ForgetPassword from './src/pages/authentication/forgetPassword';
 import LoginEmail from './src/pages/authentication/loginEmail';
@@ -66,16 +66,16 @@ import MyStatus from './src/pages/status/myStatus';
 import NoStatus from './src/pages/status/noStatus';
 import StatusAdd from './src/pages/status/statusAdd';
 import VerifyCode from './src/pages/verifyCode';
-import {useTheme} from './src/theme/themeContext';
+import { useTheme } from './src/theme/themeContext';
 import TermsAndConditions from './src/utils/data/termsAndConditions';
-import {screenName} from './src/utils/screenName';
-import {colors} from './src/utils/colors';
+import { screenName } from './src/utils/screenName';
+import { colors } from './src/utils/colors';
 import MainStack from './src/navigation/MainStack';
-import {get} from './src/utils/storage';
-import {TOKEN_KEY} from './src/services/Endpoints';
-import {useAppDispatch, useAppSelector} from './src/redux/hooks';
-import {setIsLoggedIn} from './src/redux/slices/authSlice';
-import {socket} from './src/utils/socket';
+import { get } from './src/utils/storage';
+import { TOKEN_KEY } from './src/services/Endpoints';
+import { useAppDispatch, useAppSelector } from './src/redux/hooks';
+import { setIsLoggedIn } from './src/redux/slices/authSlice';
+import { socket } from './src/utils/socket';
 import AuthStackNavigator from './src/navigation/AuthStack';
 
 const Stack = createNativeStackNavigator();
@@ -97,7 +97,7 @@ export const navigationRef = createNavigationContainerRef();
 const HomeNavigation = (props: NavigationProps) => {
   return (
     <Stack.Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{ headerShown: false }}
       initialRouteName={props.initialRouteName}>
       {/* <Stack.Screen name={screenName.WelcomePage} component={WelcomePage} /> */}
       <Stack.Screen name={screenName.LoginEmail} component={LoginEmail} />
@@ -228,9 +228,9 @@ interface RootNavigationProps {
 }
 
 const RootNavigation = (props: RootNavigationProps) => {
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const dispatch = useAppDispatch();
-  const {isAuthenticated} = useAppSelector(state => state.auth);
+  const { isAuthenticated } = useAppSelector(state => state.auth);
   const checkIsLoggedIn = async () => {
     const token = await get(TOKEN_KEY);
 
@@ -251,139 +251,141 @@ const RootNavigation = (props: RootNavigationProps) => {
         {!isAuthenticated ? (
           <Stack.Screen name={'AuthStack'} component={AuthStackNavigator} />
         ) : (
-          <Stack.Screen name={'MainStack'} component={MainStack} />
+          <>
+            <Stack.Screen name={'MainStack'} component={MainStack} />
+            <Stack.Screen name={screenName.Chats} component={Chats} />
+            <Stack.Screen name={screenName.ChatView} component={ChatView} />
+            <Stack.Screen name={screenName.UserProfile} component={UserProfile} />
+            <Stack.Screen
+              name={screenName.CreateNewPassword}
+              component={CreateNewPassword}
+            />
+            <Stack.Screen name={screenName.AddContact} component={AddContact} />
+            <Stack.Screen name={screenName.ContactPage} component={ContactPage} />
+            <Stack.Screen
+              name={screenName.SettingsScreen}
+              component={SettingsScreen}
+            />
+            <Stack.Screen
+              name={screenName.SocialProfiles}
+              component={SocialProfiles}
+            />
+            <Stack.Screen name={screenName.Password} component={Password} />
+            <Stack.Screen name={screenName.Group} component={Groups} />
+            <Stack.Screen
+              name={screenName.GroupChatting}
+              component={GroupChatting}
+            />
+            <Stack.Screen
+              name={screenName.GroupChattingAdmin}
+              component={GroupChattingAdmin}
+            />
+            <Stack.Screen name={screenName.GroupInfo} component={GroupInfo} />
+            <Stack.Screen
+              name={screenName.GroupInfoAdmin}
+              component={GroupInfoAdmin}
+            />
+            <Stack.Screen
+              name={screenName.SingleAudioCallRing}
+              component={SingleAudioCallRing}
+            />
+            <Stack.Screen
+              name={screenName.SingleAudioCallAttend}
+              component={SingleAudioCallAttend}
+            />
+            <Stack.Screen name={screenName.Calling} component={Calling} />
+            <Stack.Screen
+              name={screenName.SingleVideoCall}
+              component={SingleVideoCallAttend}
+            />
+            <Stack.Screen
+              name={screenName.GroupAudioCallAttend}
+              component={GroupAudioCallAttend}
+            />
+            <Stack.Screen
+              name={screenName.GroupVideoCallAttend}
+              component={GroupVideoCallAttend}
+            />
+            <Stack.Screen name={screenName.Media} component={Media} />
+            <Stack.Screen name={screenName.Image} component={ImageScreen} />
+            <Stack.Screen name={screenName.ImageView} component={ImageView} />
+            <Stack.Screen name={screenName.Video} component={Video} />
+            <Stack.Screen name={screenName.Link} component={Link} />
+            <Stack.Screen name={screenName.VideoView} component={VideoView} />
+            <Stack.Screen
+              name={screenName.StarredMsg}
+              component={StarredMessages}
+            />
+            <Stack.Screen name={screenName.Privacy} component={Privacy} />
+            <Stack.Screen name={screenName.ChatSettings} component={ChatSettings} />
+            <Stack.Screen name={screenName.Calls} component={Calls} />
+            <Stack.Screen name={screenName.CallHistory} component={CallHistory} />
+            <Stack.Screen
+              name={screenName.GroupSettings}
+              component={GroupSettings}
+            />
+            <Stack.Screen name={screenName.VerifyCode} component={VerifyCode} />
+            <Stack.Screen
+              name={screenName.ChooseWallpaper}
+              component={ChooseWallper}
+            />
+            <Stack.Screen name={screenName.Notification} component={Notification} />
+            <Stack.Screen
+              name={screenName.TermsAndCondition}
+              component={TermsAndConditions}
+            />
+            <Stack.Screen name={screenName.CreateGroup} component={CreateGroup} />
+            <Stack.Screen
+              name={screenName.CreateGroupUserSelect}
+              component={CreateGroupUserSelect}
+            />
+            <Stack.Screen
+              name={screenName.AccountSettings}
+              component={AccountSettings}
+            />
+            <Stack.Screen
+              name={screenName.StatusMyContactExcept}
+              component={StatusMyContactsExceptOnly}
+            />
+            <Stack.Screen
+              name={screenName.StatusOnlyShareWith}
+              component={StatusOnlyShareWith}
+            />
+            <Stack.Screen
+              name={screenName.EditAccountSettings}
+              component={EditAccountSettings}
+            />
+            <Stack.Screen
+              name={screenName.DeleteAccount}
+              component={DeleteAccount}
+            />
+            <Stack.Screen
+              name={screenName.BlockedContacts}
+              component={BlockedContacts}
+            />
+            <Stack.Screen name={screenName.NewChat} component={NewChat} />
+            <Stack.Screen name={screenName.ForwardTo} component={Forward} />
+            <Stack.Screen name={screenName.InviteFriend} component={Invitefriend} />
+            <Stack.Screen name={screenName.MessageInfo} component={MessageInfo} />
+            <Stack.Screen
+              name={screenName.Managedevices}
+              component={ManageDevices}
+            />
+            <Stack.Screen
+              name={screenName.PrivacyPolicy}
+              component={PrivacyPolicy}
+            />
+            <Stack.Screen name={screenName.NoStatus} component={NoStatus} />
+            <Stack.Screen name={screenName.StatusAdd} component={StatusAdd} />
+            <Stack.Screen name={screenName.MyStatus} component={MyStatus} />
+            <Stack.Screen name={screenName.FriendStatus} component={FriendStatus} />
+            <Stack.Screen name={screenName.EditContact} component={EditContact} />
+            <Stack.Screen
+              name={screenName.ContactDetails}
+              component={ContactDetails}
+            />
+          </>
         )}
-        {/* <Stack.Screen name={screenName.Chats} component={Chats} /> */}
-        <Stack.Screen name={screenName.ChatView} component={ChatView} />
-        <Stack.Screen name={screenName.UserProfile} component={UserProfile} />
-        <Stack.Screen
-          name={screenName.CreateNewPassword}
-          component={CreateNewPassword}
-        />
-        <Stack.Screen name={screenName.AddContact} component={AddContact} />
-        <Stack.Screen name={screenName.ContactPage} component={ContactPage} />
-        <Stack.Screen
-          name={screenName.SettingsScreen}
-          component={SettingsScreen}
-        />
-        <Stack.Screen
-          name={screenName.SocialProfiles}
-          component={SocialProfiles}
-        />
-        <Stack.Screen name={screenName.Password} component={Password} />
-        <Stack.Screen name={screenName.Group} component={Groups} />
-        <Stack.Screen
-          name={screenName.GroupChatting}
-          component={GroupChatting}
-        />
-        <Stack.Screen
-          name={screenName.GroupChattingAdmin}
-          component={GroupChattingAdmin}
-        />
-        <Stack.Screen name={screenName.GroupInfo} component={GroupInfo} />
-        <Stack.Screen
-          name={screenName.GroupInfoAdmin}
-          component={GroupInfoAdmin}
-        />
-        <Stack.Screen
-          name={screenName.SingleAudioCallRing}
-          component={SingleAudioCallRing}
-        />
-        <Stack.Screen
-          name={screenName.SingleAudioCallAttend}
-          component={SingleAudioCallAttend}
-        />
-        <Stack.Screen name={screenName.Calling} component={Calling} />
-        <Stack.Screen
-          name={screenName.SingleVideoCall}
-          component={SingleVideoCallAttend}
-        />
-        <Stack.Screen
-          name={screenName.GroupAudioCallAttend}
-          component={GroupAudioCallAttend}
-        />
-        <Stack.Screen
-          name={screenName.GroupVideoCallAttend}
-          component={GroupVideoCallAttend}
-        />
-        <Stack.Screen name={screenName.Media} component={Media} />
-        <Stack.Screen name={screenName.Image} component={ImageScreen} />
-        <Stack.Screen name={screenName.ImageView} component={ImageView} />
-        <Stack.Screen name={screenName.Video} component={Video} />
-        <Stack.Screen name={screenName.Link} component={Link} />
-        <Stack.Screen name={screenName.VideoView} component={VideoView} />
-        <Stack.Screen
-          name={screenName.StarredMsg}
-          component={StarredMessages}
-        />
-        <Stack.Screen name={screenName.Privacy} component={Privacy} />
-        <Stack.Screen name={screenName.ChatSettings} component={ChatSettings} />
-        <Stack.Screen name={screenName.Calls} component={Calls} />
-        <Stack.Screen name={screenName.CallHistory} component={CallHistory} />
-        <Stack.Screen
-          name={screenName.GroupSettings}
-          component={GroupSettings}
-        />
-        <Stack.Screen name={screenName.VerifyCode} component={VerifyCode} />
-        <Stack.Screen
-          name={screenName.ChooseWallpaper}
-          component={ChooseWallper}
-        />
-        <Stack.Screen name={screenName.Notification} component={Notification} />
-        <Stack.Screen
-          name={screenName.TermsAndCondition}
-          component={TermsAndConditions}
-        />
-        <Stack.Screen name={screenName.CreateGroup} component={CreateGroup} />
-        <Stack.Screen
-          name={screenName.CreateGroupUserSelect}
-          component={CreateGroupUserSelect}
-        />
-        <Stack.Screen
-          name={screenName.AccountSettings}
-          component={AccountSettings}
-        />
-        <Stack.Screen
-          name={screenName.StatusMyContactExcept}
-          component={StatusMyContactsExceptOnly}
-        />
-        <Stack.Screen
-          name={screenName.StatusOnlyShareWith}
-          component={StatusOnlyShareWith}
-        />
-        <Stack.Screen
-          name={screenName.EditAccountSettings}
-          component={EditAccountSettings}
-        />
-        <Stack.Screen
-          name={screenName.DeleteAccount}
-          component={DeleteAccount}
-        />
-        <Stack.Screen
-          name={screenName.BlockedContacts}
-          component={BlockedContacts}
-        />
-        <Stack.Screen name={screenName.NewChat} component={NewChat} />
-        <Stack.Screen name={screenName.ForwardTo} component={Forward} />
-        <Stack.Screen name={screenName.InviteFriend} component={Invitefriend} />
-        <Stack.Screen name={screenName.MessageInfo} component={MessageInfo} />
-        <Stack.Screen
-          name={screenName.Managedevices}
-          component={ManageDevices}
-        />
-        <Stack.Screen
-          name={screenName.PrivacyPolicy}
-          component={PrivacyPolicy}
-        />
-        <Stack.Screen name={screenName.NoStatus} component={NoStatus} />
-        <Stack.Screen name={screenName.StatusAdd} component={StatusAdd} />
-        <Stack.Screen name={screenName.MyStatus} component={MyStatus} />
-        <Stack.Screen name={screenName.FriendStatus} component={FriendStatus} />
-        <Stack.Screen name={screenName.EditContact} component={EditContact} />
-        <Stack.Screen
-          name={screenName.ContactDetails}
-          component={ContactDetails}
-        />
       </Stack.Navigator>
     </NavigationContainer>
   );
