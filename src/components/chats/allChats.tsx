@@ -154,114 +154,123 @@ const AllChats = ({ selectedCards, onCardSelection, chats, currentUserId }: AllC
                             </TouchableOpacity>
                         </View>
                     ))} */}
-                    {chats.map((chat: any) => (
-                        <View key={chat?._id}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    // if (selectedCards.length === 0) {
-                                    //     navigation.navigate(screenName.ChatView as never, {
-                                    //         chatId: chat?._id,
-                                    //         receiverPhone: chat?.name,
-                                    //     } as never);
-                                    // } else {
-                                    //     onCardSelection(chat?._id);
-                                    // }
-                                    console.log(chat,'----chat');
-                                    
-                                    navigation.navigate(screenName.ChatView, {
-                                        chatId: chat.id,
-                                        currentUserId: currentUserId,
-                                        // chatDetails: chat.participants?.find(
-                                        //     (p) => p._id !== currentUserId
-                                        // ),
-                                        chatDetails: chat
-                                    });
-                                }}
-                                onLongPress={() => onCardSelection(chat?._id)}
-                                style={{
-                                    flexDirection: 'row',
-                                    padding: 15,
-                                    backgroundColor: selectedCards.includes(chat?._id)
-                                        ? colors.primaryVar1
-                                        : colors.white,
-                                    borderBottomColor: colors.greyVar1,
-                                    borderBottomWidth: 0.5,
-                                }}
-                            >
-                                <View style={{ marginRight: 15 }}>
-                                    <Image
-                                        source={require('../../../assets/images/png/person.png')}
-                                        style={{ width: 50, height: 50, borderRadius: 25 }}
-                                    />
-                                    {chat?.isOnline && (
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                bottom: 3,
-                                                right: 3,
-                                                width: 12,
-                                                height: 12,
-                                                borderRadius: 6,
-                                                backgroundColor: '#20c997',
-                                                borderWidth: 2,
-                                                borderColor: colors.white,
-                                            }}
-                                        />
-                                    )}
-                                </View>
-                                <View style={{ flex: 1 }}>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <Text style={[commonText.h15Blackvar2Bold500]}>{chat?.name}</Text>
-                                        <Text style={[commonText.h12fontBold400GreyVar4]}>
-                                            {chat?.lastMessageTime}
-                                        </Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <Text
-                                            numberOfLines={1}
-                                            style={{
-                                                color: colors.greyVar4,
-                                                flex: 1,
-                                                marginRight: 10,
-                                                ...commonText.h14GreyVar4Bold400,
-                                            }}
-                                        >
-                                            {chat?.lastMessage}
-                                        </Text>
 
-                                        {chat?.unreadCount > 0 && (
+                    {chats?.length > 0 ?
+                        chats.map((chat: any) => (
+                            <View key={chat?._id}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        // if (selectedCards.length === 0) {
+                                        //     navigation.navigate(screenName.ChatView as never, {
+                                        //         chatId: chat?._id,
+                                        //         receiverPhone: chat?.name,
+                                        //     } as never);
+                                        // } else {
+                                        //     onCardSelection(chat?._id);
+                                        // }
+                                        console.log(chat, '----chat');
+
+                                        navigation.navigate(screenName.ChatView, {
+                                            chatId: chat.id,
+                                            currentUserId: currentUserId,
+                                            // chatDetails: chat.participants?.find(
+                                            //     (p) => p._id !== currentUserId
+                                            // ),
+                                            chatDetails: chat
+                                        });
+                                    }}
+                                    onLongPress={() => onCardSelection(chat?._id)}
+                                    style={{
+                                        flexDirection: 'row',
+                                        padding: 15,
+                                        backgroundColor: selectedCards.includes(chat?._id)
+                                            ? colors.primaryVar1
+                                            : colors.white,
+                                        borderBottomColor: colors.greyVar1,
+                                        borderBottomWidth: 0.5,
+                                    }}
+                                >
+                                    <View style={{ marginRight: 15 }}>
+                                        <Image
+                                            source={require('../../../assets/images/png/person.png')}
+                                            style={{ width: 50, height: 50, borderRadius: 25 }}
+                                        />
+                                        {chat?.isOnline && (
                                             <View
                                                 style={{
-                                                    backgroundColor: colors.primaryVar3,
-                                                    width: 22,
-                                                    height: 22,
-                                                    borderRadius: 11,
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
+                                                    position: 'absolute',
+                                                    bottom: 3,
+                                                    right: 3,
+                                                    width: 12,
+                                                    height: 12,
+                                                    borderRadius: 6,
+                                                    backgroundColor: '#20c997',
+                                                    borderWidth: 2,
+                                                    borderColor: colors.white,
                                                 }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        color: colors.white,
-                                                        fontSize: 12,
-                                                        fontWeight: '600',
-                                                    }}
-                                                >
-                                                    {chat?.unreadCount}
-                                                </Text>
-                                            </View>
+                                            />
                                         )}
                                     </View>
-                                </View>
-                            </TouchableOpacity>
+                                    <View style={{ flex: 1 }}>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <Text style={[commonText.h15Blackvar2Bold500]}>{chat?.name}</Text>
+                                            <Text style={[commonText.h12fontBold400GreyVar4]}>
+                                                {chat?.lastMessageTime}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Text
+                                                numberOfLines={1}
+                                                style={{
+                                                    color: colors.greyVar4,
+                                                    flex: 1,
+                                                    marginRight: 10,
+                                                    ...commonText.h14GreyVar4Bold400,
+                                                }}
+                                            >
+                                                {chat?.lastMessage}
+                                            </Text>
+
+                                            {chat?.unreadCount > 0 && (
+                                                <View
+                                                    style={{
+                                                        backgroundColor: colors.primaryVar3,
+                                                        width: 22,
+                                                        height: 22,
+                                                        borderRadius: 11,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            color: colors.white,
+                                                            fontSize: 12,
+                                                            fontWeight: '600',
+                                                        }}
+                                                    >
+                                                        {chat?.unreadCount}
+                                                    </Text>
+                                                </View>
+                                            )}
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        ))
+                        :
+                        <View style={{
+                            flex: 1, justifyContent: 'center', alignItems: 'center',
+                        }} >
+                            <Text style={{ fontSize: 16, color: colors.greyVar4 }}>No Chats yet</Text>
                         </View>
-                    ))}
+                    }
                 </View>
             </ScrollView >
             <BottomTabBar />

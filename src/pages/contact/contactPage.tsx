@@ -16,6 +16,7 @@ import { formatContact, mergeRegisteredWithContacts } from '../../utils/function
 import { useAppSelector } from '../../redux/hooks';
 import { navigationRef } from '../../../navigation';
 import { getUsersService } from '../../services/Auth';
+import { fontValue } from '../../utils/responsiveFont';
 
 export type AllChatsProps = {
 
@@ -164,6 +165,13 @@ const ContactPage = ({ }: AllChatsProps) => {
                                     {title}
                                 </Text>
                             )}
+                            ListEmptyComponent={()=>{
+                                return(
+                                    <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                                        <Text style={{fontSize:16,color:colors.greyVar4,marginTop:fontValue(20)}}>No Contact</Text>
+                                    </View>
+                                )
+                            }}
                             renderItem={({ item }) => (
                                 <TouchableOpacity
                                     onPress={() => {

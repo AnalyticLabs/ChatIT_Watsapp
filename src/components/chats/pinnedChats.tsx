@@ -4,15 +4,16 @@ import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { useTheme } from '../../theme/themeContext';
 import CustomIcon from '../../utils/Icons';
 import { colors } from '../../utils/colors';
-import { PinnedChatsdata } from '../../utils/data/chatsData';
+// import { PinnedChatsdata } from '../../utils/data/chatsData';
 import { DevWidth } from '../../utils/device';
 import { labels } from '../../utils/labels';
 import { screenName } from '../../utils/screenName';
 import { BlackDoubleTickIcon, BlackSingleTickIcon, BlueDoubleTickIcon, DoubleTickDarkIcon, FileBlackIcon, FileDarkIcon, ImageDarkIcon, MicrophoneDarkIcon, MikeBlackIcon, PhoneIncomingDarkIcon, PhoneIncomingRedIcon, PictureBlackIcon, PinBlackIcon, PinDarkIcon, SingleTickDarkIcon, VideoBlackIcon, VideoDarkIcon, VideoRedDarkIcon, VideoRedIcon } from '../../utils/svg';
 import { BottomTabBar } from '../commonComponents';
 import { alignItemsCenter, flex1, flexRow, justyfyCenter, mb60, mr5, mt0, mt20, mt3, mt5, mv10, pb5, ph20, pv15 } from '../commonStyles';
-import {  commonText } from '../commonText';
+import { commonText } from '../commonText';
 import { commonView } from '../commonView';
+import { fontValue } from '../../utils/responsiveFont';
 
 export type PinnedChatsProps = {
     selectedCards: number[];
@@ -21,17 +22,18 @@ export type PinnedChatsProps = {
 
 
 const PinnedChats = ({ selectedCards, onCardSelection }: PinnedChatsProps) => {
+    const PinnedChatsdata = []
     const navigation = useNavigation();
-    const {theme} = useTheme();
+    const { theme } = useTheme();
     const isDarkTheme = theme === 'dark';
 
     return (
         <View style={[{ backgroundColor: isDarkTheme ? colors.darkModeVar2 : colors.white }, flex1, mt20, styles.whiteBg]}>
             <View style={flex1}>
-                <ScrollView showsVerticalScrollIndicator={false} style = {mb60}>
-                    {PinnedChatsdata.map((chat) => (
+                <ScrollView showsVerticalScrollIndicator={false} style={mb60}>
+                    {PinnedChatsdata?.length > 0 ? PinnedChatsdata?.map((chat) => (
                         <View key={chat.id}>
-                            {chat.id === 1 ? <View style={mv10} /> : <View style = {[{backgroundColor: isDarkTheme ? colors.darkModeVar3 : colors.greyVar0},commonView.commonLineDividerGrey]} />}
+                            {chat.id === 1 ? <View style={mv10} /> : <View style={[{ backgroundColor: isDarkTheme ? colors.darkModeVar3 : colors.greyVar0 }, commonView.commonLineDividerGrey]} />}
                             <TouchableOpacity onPress={() => {
                                 if (selectedCards.length === 0) {
                                     navigation.navigate(screenName.ChatView as never);
@@ -58,7 +60,7 @@ const PinnedChats = ({ selectedCards, onCardSelection }: PinnedChatsProps) => {
                                         }
                                     </View>
                                     <View style={[flex1]}>
-                                       <View style={[commonView.rowSpaceBetween,pb5]}>
+                                        <View style={[commonView.rowSpaceBetween, pb5]}>
                                             <Text style={[commonText.h15Blackvar2Bold500]}>{chat.name}</Text>
                                             {
                                                 chat.id === 4 ? (
@@ -71,7 +73,7 @@ const PinnedChats = ({ selectedCards, onCardSelection }: PinnedChatsProps) => {
                                         {chat.id === 1 ? (
                                             <View style={[commonView.rowSpaceBetween]}>
                                                 <Text style={[commonText.h14GreenBold400]}>{labels.Typing}</Text>
-                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                <View style={[commonView.rowSpaceEvenly]}>
                                                     <View style={mr5}>
                                                         <BlueDoubleTickIcon />
                                                     </View>
@@ -80,13 +82,13 @@ const PinnedChats = ({ selectedCards, onCardSelection }: PinnedChatsProps) => {
                                             </View>
                                         ) : chat.id === 2 ? (
                                             <View style={[commonView.rowSpaceBetween]}>
-                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                <View style={[commonView.rowSpaceEvenly]}>
                                                     <View style={mr5}>
                                                         {isDarkTheme ? <VideoDarkIcon /> : <VideoBlackIcon />}
                                                     </View>
                                                     <Text style={[commonText.h14GreyVar4Bold400]}>{labels.Video}</Text>
                                                 </View>
-                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                <View style={[commonView.rowSpaceEvenly]}>
                                                     <View style={mr5}>
                                                         <BlueDoubleTickIcon />
                                                     </View>
@@ -95,13 +97,13 @@ const PinnedChats = ({ selectedCards, onCardSelection }: PinnedChatsProps) => {
                                             </View>
                                         ) : chat.id === 3 ? (
                                             <View style={[commonView.rowSpaceBetween]}>
-                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                <View style={[commonView.rowSpaceEvenly]}>
                                                     <View style={mr5}>
                                                         {isDarkTheme ? <MicrophoneDarkIcon /> : <MikeBlackIcon />}
                                                     </View>
                                                     <Text style={[commonText.h14GreyVar4Bold400]}>{labels.Audio}</Text>
                                                 </View>
-                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                <View style={[commonView.rowSpaceEvenly]}>
                                                     <View style={mr5}>
                                                         {isDarkTheme ? <SingleTickDarkIcon /> : <BlackSingleTickIcon />}
                                                     </View>
@@ -111,18 +113,18 @@ const PinnedChats = ({ selectedCards, onCardSelection }: PinnedChatsProps) => {
                                         ) : chat.id === 4 ? (
                                             <View style={[commonView.rowSpaceBetween]}>
                                                 <Text style={[commonText.h14GreyVar4Bold400]}>{labels.Chaturl}</Text>
-                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                <View style={[commonView.rowSpaceEvenly]}>
                                                     <View style={[styles.roundNumber, mr5, { backgroundColor: colors.primaryVar3 }]}>
                                                         <Text style={styles.roundNumberText}>3</Text>
                                                     </View>
                                                     <View style={mt5}>
-                                                    {isDarkTheme ? <PinDarkIcon /> : <PinBlackIcon />}
+                                                        {isDarkTheme ? <PinDarkIcon /> : <PinBlackIcon />}
                                                     </View>
                                                 </View>
                                             </View>
                                         ) : chat.id === 5 ? (
                                             <View style={[commonView.rowSpaceBetween]}>
-                                                 <View style={[commonView.rowSpaceEvenly]}>
+                                                <View style={[commonView.rowSpaceEvenly]}>
                                                     <View style={mr5}>
                                                         {isDarkTheme ? <ImageDarkIcon /> : <PictureBlackIcon />}
                                                     </View>
@@ -161,7 +163,7 @@ const PinnedChats = ({ selectedCards, onCardSelection }: PinnedChatsProps) => {
                                                     <View style={[mr5, isDarkTheme ? mt0 : mt3]} >
                                                         {isDarkTheme ? <VideoRedDarkIcon /> : <VideoRedIcon />}
                                                     </View>
-                                                   <Text style={[commonText.h14redText]}>{labels.MissedVideoCall}</Text>
+                                                    <Text style={[commonText.h14redText]}>{labels.MissedVideoCall}</Text>
                                                 </View>
                                                 {isDarkTheme ? <PinDarkIcon /> : <PinBlackIcon />}
                                             </View>
@@ -171,7 +173,14 @@ const PinnedChats = ({ selectedCards, onCardSelection }: PinnedChatsProps) => {
                                 </View>
                             </TouchableOpacity>
                         </View>
-                    ))}
+                    ))
+                        :
+                        <View style={{
+                            flex: 1, justifyContent: 'center', alignItems: 'center',
+                        }} >
+                            <Text style={{ fontSize: 16, color: colors.greyVar4, marginTop: fontValue(20) }}>No Pinned Chat</Text>
+                        </View>
+                    }
                 </ScrollView>
             </View>
             <BottomTabBar />

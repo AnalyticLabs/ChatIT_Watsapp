@@ -28,7 +28,7 @@ export type chatViewProps = {
 }
 
 const ChatView = ({ route }: any) => {
-  const {user} = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const { chatId, chatDetails } = route.params || {};
   const otherUserId = chatDetails?.otherUserId;
   const isGroup = chatDetails?.isGroup;
@@ -41,8 +41,13 @@ const ChatView = ({ route }: any) => {
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
-const currentUserId = user?._id;
-console.log(chatDetails,'----chatDetails');
+  const currentUserId = user?._id;
+  const scrollViewRef = useRef(null);
+
+
+useEffect(() => {
+  scrollViewRef.current?.scrollToEnd({ animated: true });
+}, [messages]);
 
 
   useEffect(() => {
@@ -245,13 +250,18 @@ console.log(chatDetails,'----chatDetails');
             style={styles.backgroundImage}
             imageStyle={{ opacity: 0.18, backgroundColor: isDark() ? 'rgba(194, 194, 194,0.1)' : 'rgba(220, 198, 224, 0.1)' }} >
             {renderHeader()}
-            <ScrollView style={flex1}>
+            <ScrollView style={flex1}
+              ref={scrollViewRef}
+              onContentSizeChange={() => {
+                scrollViewRef.current?.scrollToEnd({ animated: true });
+              }}
+            >
               <View style={[{ alignItems: 'center' }, pt10]}>
                 <DayDetails />
               </View>
               {/* {messages.map((item, index) => ( */}
               {messages.map((item, index) => {
-                const animValue = translateXValues.current[index] || new Animated.Value(0);
+                // const animValue = translateXValues.current[index] || new Animated.Value(0);
 
                 return (
                   <PanGestureHandler
@@ -263,11 +273,11 @@ console.log(chatDetails,'----chatDetails');
                     activeOffsetX={[-200, 50]}
                   >
                     <Animated.View
-                      style={[
-                        {
-                          transform: [{ translateX: animValue }],
-                        },
-                      ]}
+                    // style={[
+                    //   {
+                    //     transform: [{ translateX: animValue }],
+                    //   },
+                    // ]}
                     >
                       <TouchableOpacity
                         style={[
