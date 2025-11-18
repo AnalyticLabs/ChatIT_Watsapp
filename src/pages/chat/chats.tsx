@@ -86,7 +86,6 @@ console.log(user,'---user');
     useFocusEffect(
         React.useCallback(() => {
             getUser()
-            // fetchChats();
         }, [])
     );
 
